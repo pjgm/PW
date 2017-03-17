@@ -12,11 +12,7 @@ import java.util.Date;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.IntPoint;
-import org.apache.lucene.document.LongPoint;
-import org.apache.lucene.document.TextField;
+import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -127,7 +123,8 @@ public class Lab0NovaBaseline {
 			Integer end = rawDocument.indexOf(',');
 			String aux = rawDocument.substring(start, end);
 			Id = Integer.decode(aux);
-			doc.add(new IntPoint("Id", Id));
+            doc.add(new IntPoint("Id", Id));
+			doc.add(new StoredField("Id", Id));
 
 			// Extract field OwnerUserId
 			start = end + 1;
@@ -135,6 +132,7 @@ public class Lab0NovaBaseline {
 			aux = rawDocument.substring(start, end);
 			Integer OwnerUserId = Integer.decode(aux);
 			doc.add(new IntPoint("OwnerUserId", OwnerUserId));
+            doc.add(new StoredField("OwnerUserId", OwnerUserId));
 
 			// Extract field CreationDate
 			try {
@@ -144,6 +142,7 @@ public class Lab0NovaBaseline {
 				Date creationDate;
 				creationDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(aux);
 				doc.add(new LongPoint("CreationDate", creationDate.getTime()));
+                doc.add(new StoredField("CreationDate", creationDate.getTime()));
 			} catch (ParseException e1) {
 				System.out.println("Error parsing date for document " + Id);
 			}
@@ -153,7 +152,8 @@ public class Lab0NovaBaseline {
 			end = rawDocument.indexOf(',', start);
 			aux = rawDocument.substring(start, end);
 			Integer ParentId = Integer.decode(aux);
-			doc.add(new IntPoint("Id", ParentId));
+			doc.add(new IntPoint("ParentId", ParentId));
+            doc.add(new StoredField("ParentId", ParentId));
 
 			// Extract field Score
 			start = end + 1;
@@ -161,6 +161,7 @@ public class Lab0NovaBaseline {
 			aux = rawDocument.substring(start, end);
 			Integer Score = Integer.decode(aux);
 			doc.add(new IntPoint("Score", Score));
+            doc.add(new StoredField("Score", Score));
 
 			// Extract field Body
 			String body = rawDocument.substring(end + 1);
@@ -177,7 +178,7 @@ public class Lab0NovaBaseline {
 		} catch (IOException e) {
 			System.out.println("Error adding document " + Id);
 		} catch (Exception e) {
-		System.out.println("Error parsing document " + Id);
+		    System.out.println("Error parsing document " + Id);
 		}
 	}
 
