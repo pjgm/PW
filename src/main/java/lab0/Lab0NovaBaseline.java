@@ -33,8 +33,8 @@ import org.apache.lucene.store.FSDirectory;
 
 public class Lab0NovaBaseline {
 
-	private String indexPath = "/home/jmag/NOVAWebSearch/lab1/index";
-	private static String docPath = "/home/jmag/NOVAWebSearch/lab1/Answers.csv";
+	private String indexPath = "index";
+	private static String docPath = "Answers.csv";
 
 	private boolean create = true;
 
