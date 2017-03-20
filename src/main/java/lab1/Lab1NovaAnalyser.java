@@ -44,22 +44,22 @@ public class Lab1NovaAnalyser extends StopwordAnalyzerBase {
 		
 		// THE FIELD IS IGNORED 
 		// ___BUT___ 
-		// you can provide different TokenStremComponents according to the fieldName
+		// you can provide different TokenStreamComponents according to the fieldName
 		
 		final StandardTokenizer src = new StandardTokenizer();
 		
 		TokenStream tok;
 		tok = new StandardFilter(src);					// text into non punctuated text
-//		tok = new LowerCaseFilter(tok);					// changes all texto into lowercase
+//		tok = new LowerCaseFilter(tok);					// changes all text into lowercase
 //		tok = new StopFilter(tok, stopwords);			// removes stop words
 
 //		tok = new ShingleFilter(tok, 2, 3);				// creates word-grams with neighboring works
 //		tok = new CommonGramsFilter(tok, stopwords);	// creates word-grams with stopwords
 //		
-		tok = new NGramTokenFilter(tok,2,5);			// creates unbounded n-grams 
+		tok = new NGramTokenFilter(tok,2,5);			// creates unbounded n-grams
 //		tok = new EdgeNGramTokenFilter(tok,2,5);		// creates word-bounded n-grams
 //		
-		tok = new SnowballFilter(tok, "English");		// stems workds according to the specified language
+		tok = new SnowballFilter(tok, "English");		// stems words according to the specified language
 		
 		return new TokenStreamComponents(src, tok) {
 			@Override
