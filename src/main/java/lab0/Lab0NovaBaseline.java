@@ -82,18 +82,20 @@ public class Lab0NovaBaseline {
 		try (BufferedReader br = new BufferedReader(new FileReader(docPath))) {
 			StringBuilder sb = new StringBuilder();
 			br.readLine(); // The first line is dummy
+            int linenr = 1;
 			String line = br.readLine();
 
 			// ====================================================
 			// Read documents
 			while (line != null) {
+			    linenr++;
 				int i = line.length();
-
-				// Search for the end of document delimiter
+                // Search for the end of document delimiter
 				if (i != 0)
 					sb.append(line);
 				sb.append(System.lineSeparator());
-				if (((i >= 2) && (line.charAt(i - 1) == '"') && (line.charAt(i - 2) != '"'))
+
+                if (((i >= 2) && (line.charAt(i - 1) == '"') && (line.charAt(i - 2) != '"'))
 						|| ((i == 1) && (line.charAt(i - 1) == '"'))) {
 					// Index the document
 					indexDoc(sb.toString());
