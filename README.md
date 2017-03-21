@@ -1,2 +1,2 @@
 # PW
-Repository for the Web Search Course
+Repository for the Web Search and Information Retrieval Course

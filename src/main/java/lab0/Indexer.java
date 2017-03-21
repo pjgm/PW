@@ -17,7 +17,6 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Scanner;
 
 public class Indexer {
 
@@ -115,91 +114,11 @@ public class Indexer {
 
     }
 
-    private void searchIndex(Analyzer analyzer) {
-        IndexReader reader = null;
-
-        try {
-            reader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
-        } catch (IOException e) {
-            System.out.println("Error opening index");
-        }
-
-        if (reader == null)
-            throw new NullPointerException("Reader is null");
-
-        IndexSearcher searcher = new IndexSearcher(reader);
-        Scanner in = new Scanner(System.in);
-
-        QueryParser parser = new QueryParser("Body", analyzer);
-
-        while (true) {
-            System.out.println("Enter query:");
-            System.out.print("> ");
-
-            String inputLine = in.nextLine().trim();
-
-            if (inputLine.isEmpty())
-                break;
-
-            Query query = null;
-            try {
-                query = parser.parse(inputLine);
-            } catch (org.apache.lucene.queryparser.classic.ParseException e) {
-                System.out.println("Error parsing input query");
-            }
-
-            if (query == null)
-                throw new NullPointerException("Query is null");
-
-            TopDocs results = null;
-
-            try {
-                results = searcher.search(query, 5);
-            } catch (IOException e) {
-                System.out.println("Error searching for results");
-            }
-
-            if (results == null)
-                throw new NullPointerException("Results is null");
-
-            ScoreDoc[] hits = results.scoreDocs;
-
-            int numTotalHits = results.totalHits;
-            System.out.println(numTotalHits + " total matching documents");
-
-            for (ScoreDoc hit : hits) {
-                Document doc = null;
-                try {
-                    doc = searcher.doc(hit.doc);
-                } catch (IOException e) {
-                    System.out.println("Error getting document");
-                }
-
-                if (doc == null)
-                    throw new NullPointerException("doc is null");
-
-                String answer = doc.get("Body");
-                Integer Id = doc.getField("Id").numericValue().intValue();
-                System.out.println("DocId: " + Id);
-                System.out.println("DocAnswer: " + answer);
-                System.out.println();
-            }
-        }
-
-        try {
-            reader.close();
-        } catch (IOException e) {
-            System.out.println("Error closing index reader");
-        }
-    }
-
     private void parseQueries(Analyzer analyzer) {
         PrintWriter writer = null;
         try {
             writer = new PrintWriter("output.txt", "UTF-8");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
@@ -214,6 +133,10 @@ public class Indexer {
         } catch (IOException e) {
             System.out.println("Error parsing queries file");
         }
+
+        if (writer == null)
+            throw new NullPointerException("Writer is null");
+
         writer.close();
     }
 
@@ -252,15 +175,8 @@ public class Indexer {
             for (ScoreDoc hit : hits) {
 
                 Document doc = searcher.doc(hit.doc);
-
                 writer.println(queryID + "\t" + "Q0" + "\t" + doc.getField("Id").numericValue().intValue()
                         + "\t" + rank++ + "\t" + hit.score + "\t" + "run-1");
-
-//                String answer = doc.get("Body");
-//                Integer Id = doc.getField("Id").numericValue().intValue();
-//                System.out.println("DocId: " + Id);
-//                System.out.println("DocAnswer: " + answer);
-//                System.out.println();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -287,8 +203,6 @@ public class Indexer {
         }
 
         indexer.parseQueries(analyzer);
-
-        //indexer.searchIndex(analyzer);
     }
 
 
