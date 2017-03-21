@@ -1,0 +1,289 @@
+3:"<p>What are some valuable Statistical Analysis open source projects available right now?</p>
+
+<p>Edit: as pointed out by Sharpie, valuable could mean helping you get things done faster or more cheaply.</p>
+"
+
+6:"<p>Last year, I read a blog post from <a href=""http://anyall.org/"">Brendan O'Connor</a> entitled <a href=""http://anyall.org/blog/2008/12/statistics-vs-machine-learning-fight/"">""Statistics vs. Machine Learning, fight!""</a> that discussed some of the differences between the two fields.  <a href=""http://andrewgelman.com/2008/12/machine_learnin/"">Andrew Gelman responded favorably to this</a>:</p>
+
+<p>Simon Blomberg: </p>
+
+<blockquote>
+  <p>From R's fortunes
+  package: To paraphrase provocatively,
+  'machine learning is statistics minus
+  any checking of models and
+  assumptions'.
+  -- Brian D. Ripley (about the difference between machine learning
+  and statistics) useR! 2004, Vienna
+  (May 2004) :-) Season's Greetings!</p>
+</blockquote>
+
+<p>Andrew Gelman:</p>
+
+<blockquote>
+  <p>In that case, maybe we should get rid
+  of checking of models and assumptions
+  more often. Then maybe we'd be able to
+  solve some of the problems that the
+  machine learning people can solve but
+  we can't!</p>
+</blockquote>
+
+<p>There was also the <a href=""http://projecteuclid.org/euclid.ss/1009213726""><strong>""Statistical Modeling: The Two Cultures""</strong> paper</a> by Leo Breiman in 2001 which argued that statisticians rely too heavily on data modeling, and that machine learning techniques are making progress by instead relying on the <em>predictive accuracy</em> of models.</p>
+
+<p>Has the statistics field changed over the last decade in response to these critiques?  Do the <em>two cultures</em> still exist or has statistics grown to embrace machine learning techniques such as neural networks and support vector machines?</p>
+"
+
+7:"<p>I've been working on a new method for analyzing and parsing datasets to identify and isolate subgroups of a population without foreknowledge of any subgroup's characteristics.  While the method works well enough with artificial data samples (i.e. datasets created specifically for the purpose of identifying and segregating subsets of the population), I'd like to try testing it with live data.</p>
+
+<p>What I'm looking for is a freely available (i.e. non-confidential, non-proprietary) data source.  Preferably one containing bimodal or multimodal distributions or being obviously comprised of multiple subsets that cannot be easily pulled apart via traditional means.  Where would I go to find such information?</p>
+"
+
+22:"<p>How would you describe in plain English the characteristics that distinguish Bayesian from Frequentist reasoning?</p>
+"
+
+31:"<p>After taking a statistics course and then trying to help fellow students, I noticed one subject that inspires much head-desk banging is interpreting the results of statistical hypothesis tests.  It seems that students easily learn how to perform the calculations required by a given test but get hung up on interpreting the results.  Many computerized tools report test results in terms of ""p values"" or ""t values"".</p>
+
+<p>How would you explain the following points to college students taking their first course in statistics:</p>
+
+<ul>
+<li><p>What does a ""p-value"" mean in relation to the hypothesis being tested?  Are there cases when one should be looking for a high p-value or a low p-value?</p></li>
+<li><p>What is the relationship between a p-value and a t-value?</p></li>
+</ul>
+"
+
+36:"<p>There is an old saying: ""Correlation does not mean causation"". When I teach, I tend to use the following standard examples to illustrate this point:</p>
+
+<ol>
+<li>number of storks and birth rate in Denmark;</li>
+<li>number of priests in America and alcoholism;</li>
+<li>in the start of the 20th century it was noted that there was a strong correlation between 'Number of radios' and 'Number of people in Insane Asylums'</li>
+<li>and my favorite: <a href=""http://en.wikipedia.org/wiki/File%3aPiratesVsTemp%28en%29.svg"">pirates cause global warming</a>.</li>
+</ol>
+
+<p>However, I do not have any references for these examples and whilst amusing, they are obviously false.</p>
+
+<p>Does anyone have any other good examples?</p>
+"
+
+73:"<p><strong>Duplicate thread:</strong> <a href=""http://stats.stackexchange.com/questions/1676/i-just-installed-the-latest-version-of-r-what-packages-should-i-obtain"">I just installed the latest version of R. What packages should I obtain?</a></p>
+
+<p>What are the <a href=""http://www.r-project.org/"">R</a> packages you couldn't imagine your daily work with data?
+Please list both general and specific tools.</p>
+
+<p>UPDATE:
+As for 24.10.10 <code>ggplot2</code> seems to be the winer with 7 votes.</p>
+
+<p>Other packages mentioned more than one are:</p>
+
+<ul>
+<li><code>plyr</code> - 4</li>
+<li><code>RODBC</code>, <code>RMySQL</code> - 4</li>
+<li><code>sqldf</code> - 3</li>
+<li><code>lattice</code> - 2</li>
+<li><code>zoo</code> - 2</li>
+<li><code>Hmisc/rms</code> - 2</li>
+<li><code>Rcurl</code> - 2</li>
+<li><code>XML</code> - 2</li>
+</ul>
+
+<p>Thanks all for your answers!</p>
+"
+
+103:"<p>What is the best blog on data visualization?</p>
+
+<p>I'm making this question a community wiki since it is highly subjective.  Please limit each answer to one link.</p>
+
+<hr>
+
+<p><strong><em>Please note the following criteria for proposed answers:</em></strong>  </p>
+
+<blockquote>
+  <p>[A]cceptable answers to questions like this ...need to supply adequate descriptions and reasoned justification. A mere hyperlink doesn't do it. ...[A]ny future replies [must] meet ...[these] standards; otherwise, <strong>they will be deleted without further comment</strong>. </p>
+</blockquote>
+"
+
+114:"<p>What statistical research blogs would you recommend, and why?</p>
+"
+
+118:"<p>In the definition of standard deviation, why do we have to <strong>square</strong> the difference from the mean to get the mean (E) and take the <strong>square root back</strong> at the end? Can't we just simply take <strong>the absolute value</strong> of the difference instead and get the expected value (mean) of those, and wouldn't that also show the variation of the data? The number is going to be different from square method (the absolute-value method will be smaller), but it should still show the spread of data. Anybody know why we take this square approach as a standard?</p>
+
+<p>The definition of standard deviation:</p>
+
+<p>$\sigma = \sqrt{E\left[\left(X - \mu\right)^2\right]}.$
+</p>
+
+<p>Can't we just take the absolute value instead and still be a good measurement?</p>
+
+<p>$\sigma = E\left[|X - \mu|\right]$
+</p>
+"
+
+125:"<p>Which is the best introductory textbook for Bayesian statistics?</p>
+
+<p>One book per answer, please.</p>
+"
+
+138:"<p>I'm interested in learning <a href=""http://en.wikipedia.org/wiki/R_%28programming_language%29"">R</a> on the cheap. What's the best free resource/book/tutorial for learning R?</p>
+"
+
+170:"<p>Are there any free statistical textbooks available? </p>
+"
+
+213:"<p>Suppose I have a large set of multivariate data with at least three variables. How can I find the outliers? Pairwise scatterplots won't work as it is possible for an outlier to exist in 3 dimensions that is not an outlier in any of the 2 dimensional subspaces.</p>
+
+<p>I am not thinking of a regression problem, but of true multivariate data. So answers involving robust regression or computing leverage are not helpful.</p>
+
+<p>One possibility would be to compute the principal component scores and look for an outlier in the bivariate scatterplot of the first two scores. Would that be guaranteed to work? Are there better approaches?</p>
+"
+
+363:"<p>If you could go back in time and tell yourself to read a specific book at the beginning of your career as a statistician, which book would it be?</p>
+"
+
+373:"<p>From Wikipedia :</p>
+
+<blockquote>
+  <p>Suppose you're on a game show, and
+  you're given the choice of three
+  doors: Behind one door is a car;
+  behind the others, goats. You pick a
+  door, say No. 1, and the host, who
+  knows what's behind the doors, opens
+  another door, say No. 3, which has a
+  goat. He then says to you, ""Do you
+  want to pick door No. 2?"" Is it to
+  your advantage to switch your choice?</p>
+</blockquote>
+
+<p>The answer is, of course, yes - but it's incredibly un-inituitive. What misunderstanding do most people have about probability that leads to us scratching our heads -- or better put; what general rule can we take away from this puzzle to better train our intuition in the future?</p>
+"
+
+396:"<p>I usually make my own idiosyncratic choices when preparing plots. However, I wonder if there are any best practices for generating plots. </p>
+
+<p>Note: <a href=""http://stats.stackexchange.com/questions/257/what-is-the-easiest-way-to-create-publication-quality-plots-under-linux#comment152_261"">Rob's comment</a> to an answer to this <a href=""http://stats.stackexchange.com/questions/257/what-is-the-easiest-way-to-create-publication-quality-plots-under-linux"">question</a> is very relevant here. </p>
+"
+
+421:"<p>What book would you recommend for scientists who are not statisticians?</p>
+
+<p>Clear delivery is most appreciated. As well as the explanation of the appropriate techniques and methods for typical tasks: time series analysis, presentation and aggregation of large data sets.</p>
+"
+
+423:"<p>This is one of my favorites:</p>
+
+<p><img src=""http://imgs.xkcd.com/comics/correlation.png"" alt=""alt text""></p>
+
+<p>One entry per answer. This is in the vein of the Stack Overflow question <em><a href=""http://stackoverflow.com/questions/84556/whats-your-favorite-programmer-cartoon"">What’s your favorite “programmer” cartoon?</a></em>.</p>
+
+<p>P.S. Do not hotlink the cartoon without the site's permission please.</p>
+"
+
+485:"<p>A question previously sought recommendations for <a href=""http://stats.stackexchange.com/questions/414/intro-to-statistics-for-mathematicians"">textbooks on mathematical statistics</a></p>
+
+<p>Does anyone know of any good online <strong>video lectures</strong> on <strong>mathematical statistics</strong>?
+The closest that I've found are:</p>
+
+<ul>
+<li><a href=""http://www.youtube.com/watch?v=UzxYlbK2c7E&amp;feature=PlayList&amp;p=A89DCFA6ADACE599&amp;index=0"">Machine Learning</a> </li>
+<li><a href=""http://economistsview.typepad.com/economics421/"">Econometrics</a> </li>
+</ul>
+
+<p><strong>UPDATE:</strong> A number of the suggestions mentioned below are good statistics-101 type videos.
+However, I'm specifically wondering whether there are any videos that provide a rigorous mathematical presentation of statistics.
+i.e., videos that might accompany a course that use a textbook mentioned in this <a href=""http://mathoverflow.net/questions/31655/statistics-for-mathematicians"">discussion on mathoverflow</a></p>
+"
+
+534:"<p>We all know the mantra ""correlation does not imply causation"" which is drummed into all first year statistics students. There are some nice examples <a href=""http://stats.stackexchange.com/questions/36/correlation-does-not-mean-causation"">here</a> to illustrate the idea.</p>
+
+<p>But sometimes correlation <em>does</em> imply causation. The following example is taking from this <a href=""http://en.wikipedia.org/wiki/Correlation_does_not_imply_causation#Determining_causation"">Wikipedia page</a></p>
+
+<blockquote>
+  <p>For example, one could run an experiment on identical twins who were known to consistently get the same grades on their tests. One twin is sent to study for six hours while the other is sent to the amusement park. If their test scores suddenly diverged by a large degree, this would be strong evidence that studying (or going to the amusement park) had a causal effect on test scores. In this case, correlation between studying and test scores would almost certainly imply causation.</p>
+</blockquote>
+
+<p>Are there other situations where correlation implies causation?</p>
+"
+
+652:"<p>I bought this book:</p>
+
+<p><a href=""http://rcm.amazon.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=justibozon-20&amp;o=1&amp;p=8&amp;l=as1&amp;m=amazon&amp;f=ifr&amp;md=10FE9736YVPPT7A0FBG2&amp;asins=0470539399"">How to Measure Anything: Finding the Value of Intangibles in Business</a> </p>
+
+<p>and </p>
+
+<p><a href=""http://rcm.amazon.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=justibozon-20&amp;o=1&amp;p=8&amp;l=as1&amp;m=amazon&amp;f=ifr&amp;md=10FE9736YVPPT7A0FBG2&amp;asins=0596153937"">Head First Data Analysis: A Learner's Guide to Big Numbers, Statistics, and Good Decisions</a></p>
+
+<p>What other books would you recommend?</p>
+"
+
+665:"<p>What's the difference between probability and statistics, and why are they studied together?</p>
+"
+
+726:"<p>What is your favorite statistical quote?  </p>
+
+<p>This is community wiki, so please one quote per answer.  </p>
+"
+
+1142:"<p>I am working with a large amount of time series. These time series are basically network measurements coming every 10 minutes, and some of them are periodic (i.e. the bandwidth), while some other aren't (i.e. the amount of routing traffic).</p>
+
+<p>I would like a simple algorithm for doing an online ""outlier detection"". Basically, I want to keep in memory (or on disk) the whole historical data for each time series, and I want to detect any outlier in a live scenario (each time a new sample is captured). What is the best way to achieve these results?</p>
+
+<p>I'm currently using a moving average in order to remove some noise, but then what next? Simple things like standard deviation, mad, ... against the whole data set doesn't work well (I can't assume the time series are stationary), and I would like something more ""accurate"", ideally a black box like:</p>
+
+<p>double outlier_detection(double* vector, double value);</p>
+
+<p>where vector is the array of double containing the historical data, and the return value is the anomaly score for the new sample ""value"" .</p>
+"
+
+1164:"<p>When solving business problems using data, it's common that at least one key assumption that under-pins classical statistics is invalid. Most of the time, no one bothers to check those assumptions so you never actually know. </p>
+
+<p>For instance, that so many of the common web metrics are ""long-tailed"" (relative to the normal distribution) is, by now, so well documented that we take it for granted. Another example, online communities--even in communities with thousands of members, it's well-documented that by far the largest share of contribution to/participation in many of these community is attributable to a minuscule group of 'super-contributors.' (E.g., a few months ago, just after the SO API was made available in beta, a <em>StackOverflow</em> member published a brief analysis from data he collected through the API; his conclusion--<em>less than one percent of the SO members account for most of the activity on SO</em> (presumably asking questions, and answering them), another 1-2% accounted for the rest, and the overwhelming majority of the members do nothing).</p>
+
+<p>Distributions of that sort--again more often the rule rather than the exception--are often best modeled with a <em>power law</em> density function. For these type of distributions, even the central limit theorem is problematic to apply.</p>
+
+<p>So given the abundance of populations like this of interest to analysts, and given that classical models perform demonstrably poorly on these data, and given that robust and resistant methods have been around for a while (at least 20 years, i believe)--why are they not used more often? (I am also wondering why <em>I</em> don't use them more often, but that's not really a question for <em>CrossValidated</em>.)</p>
+
+<p>Yes i know that there are textbook chapters devoted entirely to robust statistics and i know there are (a few) R Packages (<em>robustbase</em> is the one i am familiar with and use), etc. </p>
+
+<p>And yet given the obvious advantages of these techniques, they are often clearly the better tools for the job--<strong><em>why are they not used much more often</em></strong>? Shouldn't we expect to see robust (and resistant) statistics used far more often (perhaps even presumptively) compared with the classical analogs?</p>
+
+<p>The only substantive (i.e., technical) explanation i have heard is that robust techniques (likewise for resistant methods) lack the power/sensitivity of classical techniques. I don't know if this is indeed true in some cases, but i do know it is not true in many cases.</p>
+
+<p>A final word of preemption: yes I know this question does not have a single demonstrably correct answer; very few questions on this Site do. Moreover, this question is a genuine inquiry; it's not a pretext to advance a point of view--i don't have a point of view here, just a question for which i am hoping for some insightful answers.</p>
+"
+
+1194:"<p>This question has been bugging me for some time, and I was going to write a blog post about it. However, I think it is better left for discussion in this forum. </p>
+
+<p>Back in April, I attended a talk at the UMD Math Department Statistics group seminar series called ""To Explain or To Predict?"". The talk was given by <a href=""http://www.rhsmith.umd.edu/faculty/gshmueli/web/html/"">Prof. Galit Shmueli</a> who teaches at UMD's Smith Business School. Her talk was based on research she did for a paper titled <a href=""http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1112893"">""Predictive vs. Explanatory Modeling in IS Research""</a>, and a follow up working paper titled <a href=""http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1351252"">""To Explain or To Predict?""</a>. </p>
+
+<p>Dr. Shmueli's argument is that the terms predictive and explanatory in a statistical modeling context have become conflated, and that statistical literature lacks a a thorough discussion of the differences. In the paper, she contrasts both and talks about their practical implications. I encourage you to read the papers. </p>
+
+<p>The question I'd like to pose to the practitioner community is: have you ever fallen into the trap of using one when meaning to use the other? I certainly have. How do you know which one to use? How do you define a predictive excercise vs an exlanatory/descriptive one? It would be useful if you could talk about the specific application. </p>
+"
+
+1337:"<p>Well, we've got favourite statistics quotes. What about statistics jokes?</p>
+
+<p>So, what's your favourite statistics joke?</p>
+"
+
+1576:"<p>It seems that a number of the statistical packages that I use wrap these two concepts together. However, I'm wondering if there are different assumptions or data 'formalities' that must be true to use one over the other. A real example would be incredibly useful. </p>
+"
+
+1595:"<p>Lots of people use a main tool like Excel or another spreadsheet, SPSS, Stata, or R for their statistics needs. They might turn to some specific package for very special needs, but a lot of things can be done with a simple spreadsheet or a general stats package or stats programming environment.</p>
+
+<p>I've always liked Python as a programming language, and for simple needs, it's easy to write a short program that calculates what I need. Matplotlib allows me to plot it.</p>
+
+<p>Has anyone switched completely from, say R, to Python? R (or any other statistics package) has a lot of functionality specific to statistics, and it has data structures that allow you to think about the statistics you want to perform and less about the internal representation of your data. Python (or some other dynamic language) has the benefit of allowing me to program in a familiar, high-level language, and it lets me programmatically interact with real-world systems in which the data resides or from which I can take measurements. But I haven't found any Python package that would allow me to express things with ""statistical terminology"" – from simple descriptive statistics to more complicated multivariate methods.</p>
+
+<p>What can you recommend if I wanted to use Python as a ""statistics workbench"" to replace R, SPSS, etc.?</p>
+
+<p>What would I gain and lose, based on your experience?</p>
+"
+
+1610:"<p>I'm not a statistician by education, I'm a software engineer. Yet statistics comes up a lot. In fact, questions specifically about Type I and Type II error are coming up a lot in the course of my studying for the Certified Software Development Associate exam (mathematics and statistics are 10% of the exam). I'm having trouble always coming up with the right definitions for Type I and Type II error - although I'm memorizing them now (and can remember them most of the time), I really don't want to freeze up on this exam trying to remember what the difference is.</p>
+
+<p>I know that Type I Error is a false positive, or when you reject the null hypothesis and it's actually true and a Type II error is a false negative, or when you accept the null hypothesis and it's actually false.</p>
+
+<p>Is there an easy way to remember what the difference is, such as a mnemonic? How do professional statisticians do it - is it just something that they know from using or discussing it often?</p>
+
+<p>(Side Note: This question can probably use some better tags. One that I wanted to create was ""terminology"", but I don't have enough reputation to do it. If someone could add that, it would be great. Thanks.)</p>
+"
+
