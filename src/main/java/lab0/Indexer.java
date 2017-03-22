@@ -127,6 +127,7 @@ public class Indexer {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(":", 2);
+                System.out.println(parts[1]);
                 searchQuery(writer, analyzer, parts[0], parts[1]);
             }
 
@@ -157,6 +158,7 @@ public class Indexer {
 
         try {
             Query query = null;
+
             try {
                 query = parser.parse(queryStr);
             } catch (org.apache.lucene.queryparser.classic.ParseException e) {
@@ -166,15 +168,14 @@ public class Indexer {
             TopDocs results = searcher.search(query, 10);
             ScoreDoc[] hits = results.scoreDocs;
 
-
             int numTotalHits = results.totalHits;
             System.out.println(numTotalHits + " total matching documents");
 
             int rank = 1;
 
             for (ScoreDoc hit : hits) {
-
                 Document doc = searcher.doc(hit.doc);
+
                 writer.println(queryID + "\t" + "Q0" + "\t" + doc.getField("Id").numericValue().intValue()
                         + "\t" + rank++ + "\t" + hit.score + "\t" + "run-1");
             }
