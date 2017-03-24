@@ -34,7 +34,7 @@ public class Lab1NovaAnalyser extends StopwordAnalyzerBase {
 	/**
 	 * Builds an analyzer with the default stop words.
 	 */
-	private Lab1NovaAnalyser() {
+	public Lab1NovaAnalyser() {
 		super(stopSet);
 	}
 
