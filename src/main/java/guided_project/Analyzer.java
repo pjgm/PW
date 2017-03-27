@@ -1,9 +1,15 @@
 package guided_project;
 
-import org.apache.lucene.analysis.CharArraySet;
-import org.apache.lucene.analysis.LowerCaseFilter;
-import org.apache.lucene.analysis.StopwordAnalyzerBase;
-import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.*;
+import org.apache.lucene.analysis.charfilter.HTMLStripCharFilter;
+import org.apache.lucene.analysis.commongrams.CommonGramsFilter;
+import org.apache.lucene.analysis.en.EnglishMinimalStemFilter;
+import org.apache.lucene.analysis.en.EnglishPossessiveFilter;
+import org.apache.lucene.analysis.en.KStemFilter;
+import org.apache.lucene.analysis.en.PorterStemFilter;
+import org.apache.lucene.analysis.shingle.ShingleFilter;
+import org.apache.lucene.analysis.snowball.SnowballFilter;
+import org.apache.lucene.analysis.standard.ClassicFilter;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -30,8 +36,16 @@ public class Analyzer extends StopwordAnalyzerBase {
 
     @Override
     protected TokenStreamComponents createComponents(String s) {
-        StandardTokenizer src = new StandardTokenizer();
+        final StandardTokenizer src = new StandardTokenizer();
         TokenStream tok = new StandardFilter(src);
+
+        tok = new LowerCaseFilter(tok);
+        // tok = new StopFilter(tok, stopSet);
+        // tok = new EnglishPossessiveFilter(tok); // 5.59%
+        // tok = new KStemFilter(tok); // 5.65%
+        tok = new PorterStemFilter(tok); // 5.66%
+        // tok = new SnowballFilter(tok, "English");
+
         return new TokenStreamComponents(src, tok) {
             protected void setReader(Reader reader) {
                 src.setMaxTokenLength(maxTokenLength);
@@ -40,6 +54,11 @@ public class Analyzer extends StopwordAnalyzerBase {
         };
     }
 
+//    @Override
+//    protected Reader initReader(String fieldName, Reader reader) {
+//        return new HTMLStripCharFilter(reader);
+//    }
+
     @Override
     protected TokenStream normalize(String fieldName, TokenStream in) {
         TokenStream result = new StandardFilter(in);
@@ -47,7 +66,7 @@ public class Analyzer extends StopwordAnalyzerBase {
     }
 
     public static void main(String args[]) {
-        String text = "This is a demonstration, of the TokenStream Lucene-API,";
+        String text = "<p>This is a demonstration, of the TokenStream Lucene-API,</p>";
         Analyzer analyser = new Analyzer();
         TokenStream ts = analyser.tokenStream("field", new StringReader(text));
         CharTermAttribute cta = ts.addAttribute(CharTermAttribute.class);

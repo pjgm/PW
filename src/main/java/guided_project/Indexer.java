@@ -1,19 +1,25 @@
 package guided_project;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.search.*;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.jsoup.Jsoup;
+import org.jsoup.examples.HtmlToPlainText;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,7 +50,7 @@ public class Indexer {
             if (line.length() == 0)
                 continue;
 
-            sb.append(line).append(System.lineSeparator());
+            sb.append(line);
 
             if (line.equals("\"")) {
                 indexDoc(iw, sb.toString());
@@ -90,7 +96,10 @@ public class Indexer {
         doc.add(new StoredField("Score", score));
 
         // Parse Body
-        doc.add(new TextField("Body", parts[5], Field.Store.YES));
+        String str = new HtmlToPlainText().getPlainText(Jsoup.parse(parts[5])); // 5.91%
+        //String str = parts[5].replaceAll("\\<.*?\\>", "");
+        //System.out.print(str);
+        doc.add(new TextField("Body", str, Field.Store.YES));
 
         iw.addDocument(doc);
     }
@@ -138,7 +147,7 @@ public class Indexer {
 
     public static void main(String args[]) {
 
-        Analyzer analyzer = new StandardAnalyzer();
+        Analyzer analyzer = new Analyzer();
         Indexer indexer = new Indexer();
 
         try {
