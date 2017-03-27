@@ -7,9 +7,11 @@ import org.apache.lucene.analysis.en.EnglishMinimalStemFilter;
 import org.apache.lucene.analysis.en.EnglishPossessiveFilter;
 import org.apache.lucene.analysis.en.KStemFilter;
 import org.apache.lucene.analysis.en.PorterStemFilter;
+import org.apache.lucene.analysis.ngram.NGramTokenFilter;
 import org.apache.lucene.analysis.shingle.ShingleFilter;
 import org.apache.lucene.analysis.snowball.SnowballFilter;
 import org.apache.lucene.analysis.standard.ClassicFilter;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -22,9 +24,11 @@ import java.util.List;
 
 public class Analyzer extends StopwordAnalyzerBase {
 
-    private static List<String> stopWords = Arrays.asList("a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "if",
-            "in", "into", "is", "it", "no", "not", "of", "on", "or", "such", "that", "the", "their", "then", "there",
-            "these", "they", "this", "to", "was", "will", "with");
+//    private static List<String> stopWords = Arrays.asList("a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "if",
+//            "in", "into", "is", "it", "no", "not", "of", "on", "or", "such", "that", "the", "their", "then", "there",
+//            "these", "they", "this", "to", "was", "will", "with");
+
+    private static List<String> stopWords = Arrays.asList("you", "us", "i", "can", "have", "which", "on");
 
     private static CharArraySet stopSet = new CharArraySet(stopWords, false);
 
@@ -40,11 +44,13 @@ public class Analyzer extends StopwordAnalyzerBase {
         TokenStream tok = new StandardFilter(src);
 
         tok = new LowerCaseFilter(tok);
-        // tok = new StopFilter(tok, stopSet);
-        // tok = new EnglishPossessiveFilter(tok); // 5.59%
-        // tok = new KStemFilter(tok); // 5.65%
-        tok = new PorterStemFilter(tok); // 5.66%
-        // tok = new SnowballFilter(tok, "English");
+        tok = new StopFilter(tok, stopSet);
+        //tok = new EnglishPossessiveFilter(tok); // 5.59%
+        // tok = new KStemFilter(tok); // 5.88%
+        // tok = new NGramTokenFilter(tok,2,5); // 0%
+        // tok = new ShingleFilter(tok, 2, 3); // 4.51%
+        tok = new PorterStemFilter(tok); // 5.91%
+        // tok = new SnowballFilter(tok, "English"); // 5.85%
 
         return new TokenStreamComponents(src, tok) {
             protected void setReader(Reader reader) {
