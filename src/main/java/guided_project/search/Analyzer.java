@@ -1,17 +1,7 @@
-package guided_project;
+package guided_project.search;
 
 import org.apache.lucene.analysis.*;
-import org.apache.lucene.analysis.charfilter.HTMLStripCharFilter;
-import org.apache.lucene.analysis.commongrams.CommonGramsFilter;
-import org.apache.lucene.analysis.en.EnglishMinimalStemFilter;
-import org.apache.lucene.analysis.en.EnglishPossessiveFilter;
-import org.apache.lucene.analysis.en.KStemFilter;
 import org.apache.lucene.analysis.en.PorterStemFilter;
-import org.apache.lucene.analysis.ngram.NGramTokenFilter;
-import org.apache.lucene.analysis.shingle.ShingleFilter;
-import org.apache.lucene.analysis.snowball.SnowballFilter;
-import org.apache.lucene.analysis.standard.ClassicFilter;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -23,10 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Analyzer extends StopwordAnalyzerBase {
-
-//    private static List<String> stopWords = Arrays.asList("a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "if",
-//            "in", "into", "is", "it", "no", "not", "of", "on", "or", "such", "that", "the", "their", "then", "there",
-//            "these", "they", "this", "to", "was", "will", "with");
 
     private static List<String> stopWords = Arrays.asList("you", "us", "i", "can", "have", "which", "on");
 
@@ -45,7 +31,7 @@ public class Analyzer extends StopwordAnalyzerBase {
 
         tok = new LowerCaseFilter(tok);
         tok = new StopFilter(tok, stopSet);
-        //tok = new EnglishPossessiveFilter(tok); // 5.59%
+        // tok = new EnglishPossessiveFilter(tok); // 5.59%
         // tok = new KStemFilter(tok); // 5.88%
         // tok = new NGramTokenFilter(tok,2,5); // 0%
         // tok = new ShingleFilter(tok, 2, 3); // 4.51%

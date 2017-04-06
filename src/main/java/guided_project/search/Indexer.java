@@ -1,4 +1,4 @@
-package guided_project;
+package guided_project.search;
 
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
@@ -124,6 +124,7 @@ public class Indexer {
         IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
 
         IndexSearcher searcher = new IndexSearcher(reader);
+//        searcher.setSimilarity(new ClassicSimilarity());
         QueryParser parser = new QueryParser("Body", analyzer);
 
         Query query = parser.parse(queryStr);
