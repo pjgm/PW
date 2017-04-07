@@ -49,9 +49,11 @@ class Parser {
             if(q == null) {
                 continue;
             }
-            graph.addVertex(q.getOwnerUserId());
-            graph.addVertex(a.getOwnerUserId());
-            graph.addEdge(q, a);
+            int src = q.getOwnerUserId();
+            int dst = q.getOwnerUserId();
+            graph.addVertex(src);
+            graph.addVertex(dst);
+            graph.addEdge(src, dst);
         }
     }
 

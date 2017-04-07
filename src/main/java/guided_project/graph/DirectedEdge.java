@@ -1,32 +1,18 @@
 package guided_project.graph;
 
-import guided_project.model.Answer;
-import guided_project.model.Question;
-
 public class DirectedEdge {
 
-    private Question question;
-    private Answer answer;
+    private int linkedUser;
 
-    public DirectedEdge(Question question, Answer answer) {
-        this.question = question;
-        this.answer = answer;
+    public DirectedEdge(int linkedUser) {
+        this.linkedUser = linkedUser;
     }
 
-    public int getQuestionScore() {
-        return question.getScore();
+    public int getLinkedUser() {
+        return linkedUser;
     }
 
-    public int getAnswerScore() {
-        return answer.getScore();
+    public void setLinkedUser(int linkedUser) {
+        this.linkedUser = linkedUser;
     }
-
-    public int getFrom() {
-        return question.getOwnerUserId();
-    }
-
-    public int getTo() {
-        return answer.getOwnerUserId();
-    }
-
 }
