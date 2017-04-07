@@ -51,8 +51,7 @@ class Parser {
             }
             graph.addVertex(q.getOwnerUserId());
             graph.addVertex(a.getOwnerUserId());
-            DirectedEdge e = new DirectedEdge(q, a);
-            graph.addEdge(e);
+            graph.addEdge(q, a);
         }
     }
 

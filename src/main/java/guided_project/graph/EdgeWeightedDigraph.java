@@ -1,5 +1,7 @@
 package guided_project.graph;
 
+import guided_project.model.Answer;
+import guided_project.model.Question;
 import guided_project.search.PageRank;
 import guided_project.model.User;
 
@@ -24,9 +26,16 @@ public class EdgeWeightedDigraph {
         }
     }
 
-    public void addEdge(DirectedEdge e) {
-        User user = adj.get(e.getFrom());
-        user.addEdge(e);
+    public User getVertex(int id) {
+        return adj.get(id);
+    }
+
+    public void addEdge(Question q, Answer a) {
+        User outUser = adj.get(q.getOwnerUserId());
+        User inUser = adj.get(a.getOwnerUserId());
+        DirectedEdge e = new DirectedEdge(q, a);
+        outUser.addOutEdge(e);
+        inUser.addInEdge(e);
         E++;
     }
 
