@@ -1,6 +1,5 @@
 package guided_project.search;
 
-import guided_project.graph.DirectedEdge;
 import guided_project.graph.EdgeWeightedDigraph;
 import guided_project.model.User;
 
@@ -14,27 +13,13 @@ public class PageRank {
 
     private EdgeWeightedDigraph graph;
 
-
     private PageRank() {
         Parser parser = new Parser();
         this.graph = parser.getGraph();
         for (User u : graph.getUsers()) {
             u.setRank(1/(double)graph.V());
         }
-
-        double sum = 0;
-        for (User u : graph.getUsers()) {
-            sum += u.getRank();
-        }
-        System.out.println(sum);
-
         computePageRank(ITERATIONS);
-
-        sum = 0;
-        for (User u : graph.getUsers()) {
-            sum += u.getRank();
-        }
-        System.out.println(sum);
     }
 
     public void computePageRank(int iterations) {
@@ -43,7 +28,7 @@ public class PageRank {
                 double sum = 0;
                 for (int e : graph.getInLinks(u)) {
                     LinkedList outLinks = graph.getOutLinks(graph.getVertex(e));
-                    sum += graph.getVertex(e).getRank() / outLinks.size();
+                    sum += graph.getVertex(e).getRank() / (double)outLinks.size();
                 }
                 double newRank = ((1 - DAMPING) / graph.V()) + (DAMPING * sum);
                 u.setRank(newRank);

@@ -1,10 +1,8 @@
 package guided_project.search;
 
-import guided_project.graph.DirectedEdge;
 import guided_project.graph.EdgeWeightedDigraph;
 import guided_project.model.Answer;
 import guided_project.model.Question;
-import guided_project.model.User;
 import org.jsoup.Jsoup;
 import org.jsoup.examples.HtmlToPlainText;
 
@@ -50,7 +48,7 @@ class Parser {
                 continue;
             }
             int src = q.getOwnerUserId();
-            int dst = q.getOwnerUserId();
+            int dst = a.getOwnerUserId();
             graph.addVertex(src);
             graph.addVertex(dst);
             graph.addEdge(src, dst);
