@@ -13,9 +13,9 @@ public class EdgeWeightedDigraph {
     private int V;
     private int E;
 
-    Map<Integer, User> adj;
-    Map<User, LinkedList<Integer>> inlinks;
-    Map<User, LinkedList<Integer>> outLinks;
+    private Map<Integer, User> adj;
+    private Map<User, LinkedList<Integer>> inlinks;
+    private Map<User, LinkedList<Integer>> outLinks;
 
     public EdgeWeightedDigraph() {
         this.V = 0;

@@ -31,12 +31,7 @@ public class Analyzer extends StopwordAnalyzerBase {
 
         tok = new LowerCaseFilter(tok);
         tok = new StopFilter(tok, stopSet);
-        // tok = new EnglishPossessiveFilter(tok); // 5.59%
-        // tok = new KStemFilter(tok); // 5.88%
-        // tok = new NGramTokenFilter(tok,2,5); // 0%
-        // tok = new ShingleFilter(tok, 2, 3); // 4.51%
-        tok = new PorterStemFilter(tok); // 5.91%
-        // tok = new SnowballFilter(tok, "English"); // 5.85%
+        tok = new PorterStemFilter(tok);
 
         return new TokenStreamComponents(src, tok) {
             protected void setReader(Reader reader) {
@@ -45,11 +40,6 @@ public class Analyzer extends StopwordAnalyzerBase {
             }
         };
     }
-
-//    @Override
-//    protected Reader initReader(String fieldName, Reader reader) {
-//        return new HTMLStripCharFilter(reader);
-//    }
 
     @Override
     protected TokenStream normalize(String fieldName, TokenStream in) {
@@ -65,7 +55,6 @@ public class Analyzer extends StopwordAnalyzerBase {
 
         try {
             ts.reset();
-
             while (ts.incrementToken()) {
                 System.out.println(cta.toString());
             }

@@ -1,5 +1,6 @@
 package guided_project.search;
 
+import guided_project.model.Answer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -13,98 +14,53 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.jsoup.Jsoup;
-import org.jsoup.examples.HtmlToPlainText;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 
-public class Indexer {
+class Indexer {
 
+    private static double alfa = 0.5;
     private static String indexPath = "index";
-    @SuppressWarnings("FieldCanBeLocal")
-    private static String documentsPath = "Answers.csv";
     private static String queriesPath = "src/main/java/lab0/evaluation/queries.txt";
 
-    private IndexWriter openIndex(Analyzer analyzer) throws IOException {
+    IndexWriter openIndex(Analyzer analyzer) throws IOException {
         IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
         iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE); // create new index instead of appending to existing index
         Directory dir = FSDirectory.open(Paths.get(indexPath));
         return new IndexWriter(dir, iwc);
     }
 
-    private void indexDocuments(IndexWriter iw) throws java.text.ParseException, IOException {
+    void indexDocuments(IndexWriter iw, List<Answer> answers) throws IOException {
 
-        BufferedReader br = new BufferedReader(new FileReader(documentsPath));
-        StringBuilder sb = new StringBuilder();
-        br.readLine();
-        String line;
+        for (Answer a : answers) {
+            Document doc = new Document();
 
-        while ((line = br.readLine()) != null) {
+            doc.add(new StoredField("Id", a.getId()));
 
-            if (line.length() == 0)
-                continue;
+            doc.add(new IntPoint("OwnerUserId", a.getOwnerUserId()));
+            doc.add(new StoredField("OwnerUserId", a.getOwnerUserId()));
 
-            sb.append(line);
+            doc.add(new LongPoint("CreationDate", a.getCreationDate().getTime()));
+            doc.add(new StoredField("CreationDate", a.getCreationDate().getTime()));
 
-            if (line.equals("\"")) {
-                indexDoc(iw, sb.toString());
-                sb.setLength(0);
-            }
+            doc.add(new IntPoint("ParentId", a.getParentId()));
+            doc.add(new StoredField("ParentId", a.getParentId()));
+
+            doc.add(new IntPoint("Score", a.getScore()));
+            doc.add(new StoredField("Score", a.getScore()));
+
+            doc.add(new TextField("Body", a.getBody(), Field.Store.YES));
+
+            iw.addDocument(doc);
         }
     }
 
-    private void indexDoc(IndexWriter iw, String documentStr) throws java.text.ParseException, IOException {
-        // Each document is organized as:
-        // Id,OwnerUserId,CreationDate,ParentId,Score,Body
-        Document doc = new Document();
-        String[] parts = documentStr.split(",", 6);
-
-        // Parse Id
-        int id = Integer.parseInt(parts[0]);
-
-        doc.add(new StoredField("Id", id));
-
-        // Parse OwnerUserId
-        try {
-            int ownerUserId = Integer.parseInt(parts[1]);
-            doc.add(new IntPoint("OwnerUserId", ownerUserId));
-            doc.add(new StoredField("OwnerUserId", ownerUserId));
-        } catch (NumberFormatException e) {
-            System.err.println("Error parsing OwnerUserID of document " + id + ". " + "Skipping...");
-            return;
-        }
-
-        // Parse CreationDate
-        Date creationDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(parts[2]);
-        doc.add(new LongPoint("CreationDate", creationDate.getTime()));
-        doc.add(new StoredField("CreationDate", creationDate.getTime()));
-
-        // Parse ParentId
-        int parentId = Integer.parseInt(parts[3]);
-        doc.add(new IntPoint("ParentId", parentId));
-        doc.add(new StoredField("ParentId", parentId));
-
-        // Parse Score
-        int score = Integer.parseInt(parts[4]);
-        doc.add(new IntPoint("Score", score));
-        doc.add(new StoredField("Score", score));
-
-        // Parse Body
-        String str = new HtmlToPlainText().getPlainText(Jsoup.parse(parts[5])); // 5.91%
-        //String str = parts[5].replaceAll("\\<.*?\\>", "");
-        //System.out.print(str);
-        doc.add(new TextField("Body", str, Field.Store.YES));
-
-        iw.addDocument(doc);
-    }
-
-    private void parseQueries(Analyzer analyzer) throws IOException, ParseException {
+    void parseQueries(Analyzer analyzer) throws IOException, ParseException {
         PrintWriter writer = new PrintWriter("output.txt", "UTF-8");
 
         BufferedReader br = new BufferedReader(new FileReader(queriesPath));
@@ -135,7 +91,10 @@ public class Indexer {
         int numTotalHits = results.totalHits;
 
         System.out.println("Query number " + queryID);
+        System.out.println("Query body " + queryStr);
         System.out.println(numTotalHits + " total matching documents");
+
+        computeCombinedScore(hits);
 
         int rank = 1;
 
@@ -146,22 +105,10 @@ public class Indexer {
         }
     }
 
-    public static void main(String args[]) {
-
-        Analyzer analyzer = new Analyzer();
-        Indexer indexer = new Indexer();
-
-        try {
-            IndexWriter iw = indexer.openIndex(analyzer);
-            indexer.indexDocuments(iw);
-            iw.close();
-            indexer.parseQueries(analyzer);
-        } catch (IOException e) {
-            System.err.println("Error reading file");
-        } catch (ParseException e) {
-            System.err.println("Error parsing query");
-        } catch (java.text.ParseException e) {
-            System.err.println("Error parsing document field");
+    private void computeCombinedScore(ScoreDoc[] hits) {
+        Document doc;
+        for (ScoreDoc hit : hits) {
+            System.out.println(hit.score);
         }
     }
 }

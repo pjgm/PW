@@ -26,7 +26,6 @@ class Parser {
     private List<Answer> answers;
 
     Parser() {
-
         users = new HashSet<>();
         questions = new HashMap<>();
         answers = new ArrayList<>();
@@ -114,6 +113,10 @@ class Parser {
         }
         else
             System.err.println("type not defined");
+    }
+
+    List<Answer> getAnswers() {
+        return answers;
     }
 
 }

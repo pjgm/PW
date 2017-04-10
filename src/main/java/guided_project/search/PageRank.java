@@ -13,7 +13,7 @@ public class PageRank {
 
     private EdgeWeightedDigraph graph;
 
-    private PageRank() {
+    PageRank() {
         Parser parser = new Parser();
         this.graph = parser.getGraph();
         for (User u : graph.getUsers()) {
@@ -36,7 +36,7 @@ public class PageRank {
         }
     }
 
-    public static void main(String args[]) {
-        PageRank pr = new PageRank();
+    EdgeWeightedDigraph getGraph() {
+        return graph;
     }
 }
