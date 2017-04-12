@@ -3,6 +3,7 @@ package guided_project.search;
 import guided_project.graph.EdgeWeightedDigraph;
 import guided_project.model.Answer;
 import guided_project.model.Question;
+
 import org.jsoup.Jsoup;
 import org.jsoup.examples.HtmlToPlainText;
 
@@ -21,12 +22,10 @@ class Parser {
     private static final int ANSWER = 1;
 
     private EdgeWeightedDigraph graph;
-    private Set<Integer> users;
     private Map<Integer, Question> questions;
     private List<Answer> answers;
 
-    Parser() {
-        users = new HashSet<>();
+    public Parser() {
         questions = new HashMap<>();
         answers = new ArrayList<>();
 
@@ -36,6 +35,7 @@ class Parser {
             createGraph();
         } catch (IOException | ParseException e) {
             System.err.println("Error parsing file.");
+            e.printStackTrace();
         }
     }
 
@@ -76,6 +76,7 @@ class Parser {
                 sb.setLength(0);
             }
         }
+        br.close();
     }
     /** Each question is organized as
      *  Id,OwnerUserId,CreationDate,Score,Title,Body

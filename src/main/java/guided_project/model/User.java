@@ -4,8 +4,8 @@ public class User {
 
     private double rank;
 
-    public User(double rank) {
-        this.rank = rank;
+    public User() {
+        rank = 0;
     }
 
     public double getRank() {

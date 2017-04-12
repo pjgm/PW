@@ -1,7 +1,6 @@
 package guided_project.graph;
 
 import guided_project.model.User;
-import guided_project.search.PageRank;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,28 +9,28 @@ import java.util.Map;
 
 public class EdgeWeightedDigraph {
 
-    private int V;
-    private int E;
+    private int numOfVertex;
+    private int numOfEdges;
 
     private Map<Integer, User> adj;
     private Map<User, LinkedList<Integer>> inlinks;
     private Map<User, LinkedList<Integer>> outLinks;
 
     public EdgeWeightedDigraph() {
-        this.V = 0;
-        this.E = 0;
-        adj = new HashMap<>();
-        inlinks = new HashMap<>();
-        outLinks = new HashMap<>();
+        numOfVertex = 0;
+        numOfEdges = 0;
+        adj = new HashMap<Integer, User>();
+        inlinks = new HashMap<User, LinkedList<Integer>>();
+        outLinks = new HashMap<User, LinkedList<Integer>>();
     }
 
     public void addVertex(int id) {
         if (!adj.containsKey(id)) {
-            User u = new User(PageRank.INITIAL_RANK);
+            User u = new User();
             adj.put(id, u);
-            inlinks.put(u, new LinkedList<>());
-            outLinks.put(u, new LinkedList<>());
-            V++;
+            inlinks.put(u, new LinkedList<Integer>());
+            outLinks.put(u, new LinkedList<Integer>());
+            numOfVertex++;
         }
     }
 
@@ -44,7 +43,7 @@ public class EdgeWeightedDigraph {
         srcOutLinks.add(dst);
         LinkedList<Integer> dstInLinks = inlinks.get(adj.get(dst));
         dstInLinks.add(src);
-        E++;
+        numOfEdges++;
     }
 
     public LinkedList<Integer> getInLinks(User u) {
@@ -59,11 +58,11 @@ public class EdgeWeightedDigraph {
         return adj.values();
     }
 
-    public int V() {
-        return V;
+    public int getNumOfVertex() {
+        return numOfVertex;
     }
 
-    public int E() {
-        return E;
+    public int getNumOfEdges() {
+        return numOfEdges;
     }
 }

@@ -52,7 +52,8 @@ public class Analyzer extends StopwordAnalyzerBase {
         Analyzer analyser = new Analyzer();
         TokenStream ts = analyser.tokenStream("field", new StringReader(text));
         CharTermAttribute cta = ts.addAttribute(CharTermAttribute.class);
-
+        analyser.close();
+        
         try {
             ts.reset();
             while (ts.incrementToken()) {

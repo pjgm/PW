@@ -1,6 +1,10 @@
 package guided_project.search;
 
+import guided_project.graph.EdgeWeightedDigraph;
 import guided_project.model.Answer;
+import guided_project.model.User;
+
+import org.apache.lucene.analysis.ngram.EdgeNGramTokenFilter;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -60,7 +64,7 @@ class Indexer {
         }
     }
 
-    void parseQueries(Analyzer analyzer) throws IOException, ParseException {
+    void parseQueries(Analyzer analyzer, PageRank pr) throws IOException, ParseException {
         PrintWriter writer = new PrintWriter("output.txt", "UTF-8");
 
         BufferedReader br = new BufferedReader(new FileReader(queriesPath));
@@ -68,13 +72,14 @@ class Indexer {
 
         while ((line = br.readLine()) != null) {
             String[] parts = line.split(":", 2);
-            searchQuery(writer, analyzer, parts[0], parts[1]);
+            searchQuery(writer, analyzer, pr, parts[0], parts[1]);
         }
-
+        br.close();
+        writer.flush();
         writer.close();
     }
 
-    private void searchQuery(PrintWriter writer, Analyzer analyzer, String queryID, String queryStr) throws IOException,
+    private void searchQuery(PrintWriter writer, Analyzer analyzer, PageRank pr, String queryID, String queryStr) throws IOException,
             ParseException {
 
         IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
@@ -85,16 +90,18 @@ class Indexer {
 
         Query query = parser.parse(queryStr);
 
-        TopDocs results = searcher.search(query, 10);
+        TopDocs results = searcher.search(query, 100);
         ScoreDoc[] hits = results.scoreDocs;
-
+       // System.out.println("DEBUG: Max score from max score: " + results.getMaxScore());
+        //System.out.println("DEBUG: Min score from score doc array: " + hits[99].score);
+        
         int numTotalHits = results.totalHits;
 
         System.out.println("Query number " + queryID);
         System.out.println("Query body " + queryStr);
         System.out.println(numTotalHits + " total matching documents");
 
-        computeCombinedScore(hits);
+        computeCombinedScore(hits, pr, searcher);
 
         int rank = 1;
 
@@ -104,11 +111,27 @@ class Indexer {
                     rank++ + "\t" + hit.score + "\t" + "run-1");
         }
     }
+  
 
-    private void computeCombinedScore(ScoreDoc[] hits) {
-        Document doc;
-        for (ScoreDoc hit : hits) {
-            System.out.println(hit.score);
-        }
+    private void computeCombinedScore(ScoreDoc[] hits, PageRank pr, IndexSearcher searcher) throws IOException {
+        EdgeWeightedDigraph graph = pr.getGraph();
+    	for(int i=0; i<hits.length;i++){
+    		//Normalization
+    		hits[i].score = (hits[i].score - hits[99].score)/(hits[0].score - hits[99].score); 
+    		System.out.println("DEBUG: Normalized Doc score: " + hits[i].score);
+    		int userId = (int)searcher.doc(hits[i].doc).getField("OwnerUserId").numericValue();
+    		User user = graph.getVertex(userId);
+    		if(user==null)
+    			System.out.println("DEU MERDA");
+    		double newRank = (user.getRank()-pr.getMinValue())/(pr.getMaxValue()-pr.getMinValue());
+            System.out.println("DEBUG: Normalized user rank: " + newRank);
+    		user.setRank(newRank);
+    		//Calculate normalized final score
+    		hits[i].score = (float) (hits[i].score*newRank);
+    		System.out.println("DEBUG: Final Score: " + hits[i].score);
+    	}
+       // for (ScoreDoc hit : hits) {
+       //     System.out.println(hit.score);
+        //}
     }
 }

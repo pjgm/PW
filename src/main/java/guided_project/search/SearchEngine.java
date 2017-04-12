@@ -9,15 +9,14 @@ public class SearchEngine {
 
     public static void main(String args[]) {
 
-        Parser parser = new Parser();
+        PageRank pr = new PageRank();
         Analyzer analyzer = new Analyzer();
         Indexer indexer = new Indexer();
         try {
             IndexWriter iw = indexer.openIndex(analyzer);
-            indexer.indexDocuments(iw, parser.getAnswers());
+            indexer.indexDocuments(iw, pr.getParser().getAnswers());
             iw.close();
-            indexer.parseQueries(analyzer);
-            PageRank pr = new PageRank();
+            indexer.parseQueries(analyzer, pr);
         } catch (IOException e) {
             System.err.println("Error reading file");
         } catch (ParseException e) {
