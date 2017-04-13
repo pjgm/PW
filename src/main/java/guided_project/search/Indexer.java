@@ -36,7 +36,6 @@ import guided_project.model.User;
 class Indexer {
 
 	private static double alfa = 0.5;
-	//private static String queriesPath = "src/main/java/lab0/evaluation/queries.txt";
 
 	IndexWriter openIndex(Analyzer analyzer) throws IOException {
 		IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
@@ -163,7 +162,7 @@ class Indexer {
 					System.out.println("DEBUG: Normalized user rank: " + newRank);
 				// user.setRank(newRank);
 				pr.updateValue(userId, newRank);
-				hits[i].score = (float) (hits[i].score * user.getRank());
+				hits[i].score = (float) ((alfa*hits[i].score) * ((1-alfa)*user.getRank()));
 				if (SearchEngine.DEBUGMODE)
 					System.out.println("DEBUG: Final Score: " + hits[i].score);
 				if (SearchEngine.DEBUGMODE)
