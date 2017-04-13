@@ -5,6 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.lucene.document.Document;
@@ -29,6 +32,8 @@ import org.apache.lucene.store.FSDirectory;
 import guided_project.graph.EdgeWeightedDigraph;
 import guided_project.model.Answer;
 import guided_project.model.User;
+
+import guided_project.search.SearchEngine;
 
 
 class Indexer {
@@ -97,8 +102,8 @@ class Indexer {
 
         TopDocs results = searcher.search(query, 100);
         ScoreDoc[] hits = results.scoreDocs;
-        System.out.println("DEBUG: Max score from max score: " + results.getMaxScore());
-        System.out.println("DEBUG: Min score from score doc array: " + hits[99].score);
+        if (SearchEngine.DEBUGMODE) System.out.println("DEBUG: Max score from max score: " + results.getMaxScore());
+        if (SearchEngine.DEBUGMODE) System.out.println("DEBUG: Min score from score doc array: " + hits[99].score);
         
         int numTotalHits = results.totalHits;
 
@@ -114,6 +119,7 @@ class Indexer {
             Document doc = searcher.doc(hit.doc);
             writer.println(queryID + "\t" + "Q0" + "\t" + doc.getField("Id").numericValue().intValue() + "\t" +
                     rank++ + "\t" + hit.score + "\t" + "run-1");
+            if (rank > 10) break;
         }
     }
   
@@ -123,24 +129,29 @@ class Indexer {
     	for(int i=0; i<hits.length;i++){
     		//Normalization
     		hits[i].score = (hits[i].score - docMinScore)/(docMaxScore - docMinScore); 
-    		System.out.println("DEBUG: Normalized Doc score: " + hits[i].score);
+    		if (SearchEngine.DEBUGMODE) System.out.println("DEBUG: Normalized Doc score: " + hits[i].score);
     		int userId = (int)searcher.doc(hits[i].doc).getField("OwnerUserId").numericValue();
     		User user = graph.getVertex(userId);
     		double newRank = 0;
     		if(user != null){
-    			System.out.println("Actual: " + user.getRank());
-    			System.out.println("Max: " + pr.getMaxValue());
-    			System.out.println("Min: " + pr.getMinValue());
     			newRank = (user.getRank()-pr.getMinValue())/(pr.getMaxValue()-pr.getMinValue());
-    			System.out.println("DEBUG: Normalized user rank: " + newRank);
+    			if (SearchEngine.DEBUGMODE) System.out.println("DEBUG: Normalized user rank: " + newRank);
     			//user.setRank(newRank);
     			pr.updateValue(userId, newRank);
     			hits[i].score = (float) (hits[i].score*user.getRank());
-    			System.out.println("DEBUG: Final Score: " + hits[i].score);
-    			System.out.println("--/--");
+    			if (SearchEngine.DEBUGMODE) System.out.println("DEBUG: Final Score: " + hits[i].score);
+    			if (SearchEngine.DEBUGMODE) System.out.println("--/--");
     		}
     		//Calculate normalized final score
     	}
+    	
+    	//Sort array at the end
+    	Arrays.sort(hits, new Comparator<ScoreDoc>() {
+    	    @Override
+    	    public int compare(ScoreDoc o1, ScoreDoc o2) {
+    	        return Float.compare(o2.score, o1.score);
+    	    }
+    	});
        // for (ScoreDoc hit : hits) {
        //     System.out.println(hit.score);
         //}

@@ -6,6 +6,8 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.queryparser.classic.ParseException;
 
 public class SearchEngine {
+	
+	public static final boolean DEBUGMODE = false;
 
     public static void main(String args[]) {
 
