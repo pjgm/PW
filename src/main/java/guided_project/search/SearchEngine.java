@@ -1,9 +1,9 @@
 package guided_project.search;
 
+import java.io.IOException;
+
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.queryparser.classic.ParseException;
-
-import java.io.IOException;
 
 public class SearchEngine {
 

@@ -1,7 +1,7 @@
 package guided_project.search;
 
-import guided_project.graph.EdgeWeightedDigraph;
-import guided_project.model.User;
+import graph.EdgeWeightedDigraph;
+import model.User;
 
 import java.util.LinkedList;
 
@@ -52,6 +52,16 @@ public class PageRank {
     
     public double getMaxValue(){
     	return maxValue;
+    }
+    
+    public void updateValue(int id, double value){
+    	if(value < minValue)
+        	minValue = value;
+        if(value > maxValue)
+        	maxValue = value;
+        User user = graph.getVertex(id);
+        user.setRank(value);
+        graph.updateUser(id, user);
     }
     
     public Parser getParser(){

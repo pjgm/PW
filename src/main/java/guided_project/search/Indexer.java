@@ -1,11 +1,18 @@
 package guided_project.search;
 
-import guided_project.graph.EdgeWeightedDigraph;
-import guided_project.model.Answer;
-import guided_project.model.User;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Paths;
+import java.util.List;
 
-import org.apache.lucene.analysis.ngram.EdgeNGramTokenFilter;
-import org.apache.lucene.document.*;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.IntPoint;
+import org.apache.lucene.document.LongPoint;
+import org.apache.lucene.document.StoredField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -19,18 +26,15 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Paths;
-import java.util.List;
+import graph.EdgeWeightedDigraph;
+import model.Answer;
+import model.User;
 
 class Indexer {
 
     private static double alfa = 0.5;
     private static String indexPath = "index";
-    private static String queriesPath = "src/main/java/lab0/evaluation/queries.txt";
+    private static String queriesPath = "src\main\java\lab0\evaluation\queries.txt";
 
     IndexWriter openIndex(Analyzer analyzer) throws IOException {
         IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
@@ -92,8 +96,8 @@ class Indexer {
 
         TopDocs results = searcher.search(query, 100);
         ScoreDoc[] hits = results.scoreDocs;
-       // System.out.println("DEBUG: Max score from max score: " + results.getMaxScore());
-        //System.out.println("DEBUG: Min score from score doc array: " + hits[99].score);
+        System.out.println("DEBUG: Max score from max score: " + results.getMaxScore());
+        System.out.println("DEBUG: Min score from score doc array: " + hits[99].score);
         
         int numTotalHits = results.totalHits;
 
@@ -101,7 +105,7 @@ class Indexer {
         System.out.println("Query body " + queryStr);
         System.out.println(numTotalHits + " total matching documents");
 
-        computeCombinedScore(hits, pr, searcher);
+        computeCombinedScore(hits, pr, searcher, results.getMaxScore(), hits[99].score);
 
         int rank = 1;
 
@@ -113,22 +117,28 @@ class Indexer {
     }
   
 
-    private void computeCombinedScore(ScoreDoc[] hits, PageRank pr, IndexSearcher searcher) throws IOException {
+    private void computeCombinedScore(ScoreDoc[] hits, PageRank pr, IndexSearcher searcher, float docMaxScore, float docMinScore) throws IOException {
         EdgeWeightedDigraph graph = pr.getGraph();
     	for(int i=0; i<hits.length;i++){
     		//Normalization
-    		hits[i].score = (hits[i].score - hits[99].score)/(hits[0].score - hits[99].score); 
+    		hits[i].score = (hits[i].score - docMinScore)/(docMaxScore - docMinScore); 
     		System.out.println("DEBUG: Normalized Doc score: " + hits[i].score);
     		int userId = (int)searcher.doc(hits[i].doc).getField("OwnerUserId").numericValue();
     		User user = graph.getVertex(userId);
-    		if(user==null)
-    			System.out.println("DEU MERDA");
-    		double newRank = (user.getRank()-pr.getMinValue())/(pr.getMaxValue()-pr.getMinValue());
-            System.out.println("DEBUG: Normalized user rank: " + newRank);
-    		user.setRank(newRank);
+    		double newRank = 0;
+    		if(user != null){
+    			System.out.println("Actual: " + user.getRank());
+    			System.out.println("Max: " + pr.getMaxValue());
+    			System.out.println("Min: " + pr.getMinValue());
+    			newRank = (user.getRank()-pr.getMinValue())/(pr.getMaxValue()-pr.getMinValue());
+    			System.out.println("DEBUG: Normalized user rank: " + newRank);
+    			//user.setRank(newRank);
+    			pr.updateValue(userId, newRank);
+    			hits[i].score = (float) (hits[i].score*user.getRank());
+    			System.out.println("DEBUG: Final Score: " + hits[i].score);
+    			System.out.println("--/--");
+    		}
     		//Calculate normalized final score
-    		hits[i].score = (float) (hits[i].score*newRank);
-    		System.out.println("DEBUG: Final Score: " + hits[i].score);
     	}
        // for (ScoreDoc hit : hits) {
        //     System.out.println(hit.score);

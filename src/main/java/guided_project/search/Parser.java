@@ -1,8 +1,8 @@
 package guided_project.search;
 
-import guided_project.graph.EdgeWeightedDigraph;
-import guided_project.model.Answer;
-import guided_project.model.Question;
+import graph.EdgeWeightedDigraph;
+import model.Answer;
+import model.Question;
 
 import org.jsoup.Jsoup;
 import org.jsoup.examples.HtmlToPlainText;

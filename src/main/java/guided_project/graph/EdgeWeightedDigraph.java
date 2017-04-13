@@ -1,6 +1,6 @@
 package guided_project.graph;
 
-import guided_project.model.User;
+import model.User;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -62,6 +62,9 @@ public class EdgeWeightedDigraph {
         return numOfVertex;
     }
 
+    public void updateUser(int id, User user){
+    	adj.put(id, user);
+    }
     public int getNumOfEdges() {
         return numOfEdges;
     }
