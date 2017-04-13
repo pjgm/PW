@@ -8,6 +8,7 @@ import org.apache.lucene.queryparser.classic.ParseException;
 public class SearchEngine {
 	
 	public static final boolean DEBUGMODE = false;
+	public static final boolean KAGGLEMODE = false;
 
     public static void main(String args[]) {
 

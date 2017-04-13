@@ -35,125 +35,138 @@ import guided_project.model.User;
 
 import guided_project.search.SearchEngine;
 
-
 class Indexer {
 
-    private static double alfa = 0.5;
-    private static String indexPath = "index";
-    private static String queriesPath = "src/main/java/lab0/evaluation/queries.txt";
+	private static double alfa = 0.5;
+	private static String indexPath = "index";
+	private static String queriesPath = "src/main/java/lab0/evaluation/queries.txt";
 
-    IndexWriter openIndex(Analyzer analyzer) throws IOException {
-        IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
-        iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE); // create new index instead of appending to existing index
-        Directory dir = FSDirectory.open(Paths.get(indexPath));
-        return new IndexWriter(dir, iwc);
-    }
+	IndexWriter openIndex(Analyzer analyzer) throws IOException {
+		IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
+		iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE); // create new index
+															// instead of
+															// appending to
+															// existing index
+		Directory dir = FSDirectory.open(Paths.get(indexPath));
+		return new IndexWriter(dir, iwc);
+	}
 
-    void indexDocuments(IndexWriter iw, List<Answer> answers) throws IOException {
+	void indexDocuments(IndexWriter iw, List<Answer> answers) throws IOException {
 
-        for (Answer a : answers) {
-            Document doc = new Document();
+		for (Answer a : answers) {
+			Document doc = new Document();
 
-            doc.add(new StoredField("Id", a.getId()));
+			doc.add(new StoredField("Id", a.getId()));
 
-            doc.add(new IntPoint("OwnerUserId", a.getOwnerUserId()));
-            doc.add(new StoredField("OwnerUserId", a.getOwnerUserId()));
+			doc.add(new IntPoint("OwnerUserId", a.getOwnerUserId()));
+			doc.add(new StoredField("OwnerUserId", a.getOwnerUserId()));
 
-            doc.add(new LongPoint("CreationDate", a.getCreationDate().getTime()));
-            doc.add(new StoredField("CreationDate", a.getCreationDate().getTime()));
+			doc.add(new LongPoint("CreationDate", a.getCreationDate().getTime()));
+			doc.add(new StoredField("CreationDate", a.getCreationDate().getTime()));
 
-            doc.add(new IntPoint("ParentId", a.getParentId()));
-            doc.add(new StoredField("ParentId", a.getParentId()));
+			doc.add(new IntPoint("ParentId", a.getParentId()));
+			doc.add(new StoredField("ParentId", a.getParentId()));
 
-            doc.add(new IntPoint("Score", a.getScore()));
-            doc.add(new StoredField("Score", a.getScore()));
+			doc.add(new IntPoint("Score", a.getScore()));
+			doc.add(new StoredField("Score", a.getScore()));
 
-            doc.add(new TextField("Body", a.getBody(), Field.Store.YES));
+			doc.add(new TextField("Body", a.getBody(), Field.Store.YES));
 
-            iw.addDocument(doc);
-        }
-    }
+			iw.addDocument(doc);
+		}
+	}
 
-    void parseQueries(Analyzer analyzer, PageRank pr) throws IOException, ParseException {
-        PrintWriter writer = new PrintWriter("output.txt", "UTF-8");
+	void parseQueries(Analyzer analyzer, PageRank pr) throws IOException, ParseException {
+		PrintWriter writer = new PrintWriter("output.txt", "UTF-8");
 
-        BufferedReader br = new BufferedReader(new FileReader(queriesPath));
-        String line;
+		BufferedReader br = new BufferedReader(new FileReader(queriesPath));
+		String line;
 
-        while ((line = br.readLine()) != null) {
-            String[] parts = line.split(":", 2);
-            searchQuery(writer, analyzer, pr, parts[0], parts[1]);
-        }
-        br.close();
-        writer.flush();
-        writer.close();
-    }
+		while ((line = br.readLine()) != null) {
+			String[] parts = line.split(":", 2);
+			searchQuery(writer, analyzer, pr, parts[0], parts[1]);
+		}
+		br.close();
+		writer.flush();
+		writer.close();
+	}
 
-    private void searchQuery(PrintWriter writer, Analyzer analyzer, PageRank pr, String queryID, String queryStr) throws IOException,
-            ParseException {
+	private void searchQuery(PrintWriter writer, Analyzer analyzer, PageRank pr, String queryID, String queryStr)
+			throws IOException, ParseException {
 
-        IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
+		IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
 
-        IndexSearcher searcher = new IndexSearcher(reader);
-//        searcher.setSimilarity(new ClassicSimilarity());
-        QueryParser parser = new QueryParser("Body", analyzer);
+		IndexSearcher searcher = new IndexSearcher(reader);
+		// searcher.setSimilarity(new ClassicSimilarity());
+		QueryParser parser = new QueryParser("Body", analyzer);
 
-        Query query = parser.parse(queryStr);
+		Query query = parser.parse(queryStr);
 
-        TopDocs results = searcher.search(query, 100);
-        ScoreDoc[] hits = results.scoreDocs;
-        if (SearchEngine.DEBUGMODE) System.out.println("DEBUG: Max score from max score: " + results.getMaxScore());
-        if (SearchEngine.DEBUGMODE) System.out.println("DEBUG: Min score from score doc array: " + hits[99].score);
-        
-        int numTotalHits = results.totalHits;
+		TopDocs results = searcher.search(query, 100);
+		ScoreDoc[] hits = results.scoreDocs;
+		if (SearchEngine.DEBUGMODE)
+			System.out.println("DEBUG: Max score from max score: " + results.getMaxScore());
+		if (SearchEngine.DEBUGMODE)
+			System.out.println("DEBUG: Min score from score doc array: " + hits[99].score);
 
-        System.out.println("Query number " + queryID);
-        System.out.println("Query body " + queryStr);
-        System.out.println(numTotalHits + " total matching documents");
+		int numTotalHits = results.totalHits;
 
-        computeCombinedScore(hits, pr, searcher, results.getMaxScore(), hits[99].score);
+		System.out.println("Query number " + queryID);
+		System.out.println("Query body " + queryStr);
+		System.out.println(numTotalHits + " total matching documents");
 
-        int rank = 1;
+		computeCombinedScore(hits, pr, searcher, results.getMaxScore(), hits[99].score);
 
-        for (ScoreDoc hit : hits) {
-            Document doc = searcher.doc(hit.doc);
-            writer.println(queryID + "\t" + "Q0" + "\t" + doc.getField("Id").numericValue().intValue() + "\t" +
-                    rank++ + "\t" + hit.score + "\t" + "run-1");
-            if (rank > 10) break;
-        }
-    }
-  
+		int rank = 1;
 
-    private void computeCombinedScore(ScoreDoc[] hits, PageRank pr, IndexSearcher searcher, float docMaxScore, float docMinScore) throws IOException {
-        EdgeWeightedDigraph graph = pr.getGraph();
-    	for(int i=0; i<hits.length;i++){
-    		//Normalization
-    		hits[i].score = (hits[i].score - docMinScore)/(docMaxScore - docMinScore); 
-    		if (SearchEngine.DEBUGMODE) System.out.println("DEBUG: Normalized Doc score: " + hits[i].score);
-    		int userId = (int)searcher.doc(hits[i].doc).getField("OwnerUserId").numericValue();
-    		User user = graph.getVertex(userId);
-    		double newRank = 0;
-    		if(user != null){
-    			newRank = (user.getRank()-pr.getMinValue())/(pr.getMaxValue()-pr.getMinValue());
-    			if (SearchEngine.DEBUGMODE) System.out.println("DEBUG: Normalized user rank: " + newRank);
-    			//user.setRank(newRank);
-    			pr.updateValue(userId, newRank);
-    			hits[i].score = (float) (hits[i].score*user.getRank());
-    			if (SearchEngine.DEBUGMODE) System.out.println("DEBUG: Final Score: " + hits[i].score);
-    			if (SearchEngine.DEBUGMODE) System.out.println("--/--");
-    		}
-    		//Calculate normalized final score
-    	}
-    	
-    	//Sort array at the end
-    	Arrays.sort(hits, new Comparator<ScoreDoc>() {
-    	    @Override
-    	    public int compare(ScoreDoc o1, ScoreDoc o2) {
-    	        return Float.compare(o2.score, o1.score);
-    	    }
-    	});
-       // for (ScoreDoc hit : hits) {
-       //     System.out.println(hit.score);
-        //}
-    }
+		for (ScoreDoc hit : hits) {
+			Document doc = searcher.doc(hit.doc);
+			if (SearchEngine.KAGGLEMODE) {
+			} else {
+				writer.println(queryID + "\t" + "Q0" + "\t" + doc.getField("Id").numericValue().intValue() + "\t"
+						+ rank++ + "\t" + hit.score + "\t" + "run-1");
+			}
+			
+			if (rank > 10)
+				break;
+		}
+	}
+
+	private void computeCombinedScore(ScoreDoc[] hits, PageRank pr, IndexSearcher searcher, float docMaxScore,
+			float docMinScore) throws IOException {
+		EdgeWeightedDigraph graph = pr.getGraph();
+		for (int i = 0; i < hits.length; i++) {
+			// Normalization
+			hits[i].score = (hits[i].score - docMinScore) / (docMaxScore - docMinScore);
+			if (SearchEngine.DEBUGMODE)
+				System.out.println("DEBUG: Normalized Doc score: " + hits[i].score);
+			int userId = (int) searcher.doc(hits[i].doc).getField("OwnerUserId").numericValue();
+			User user = graph.getVertex(userId);
+			double newRank = 0;
+			if (user != null) {
+				newRank = (user.getRank() - pr.getMinValue()) / (pr.getMaxValue() - pr.getMinValue());
+				if (SearchEngine.DEBUGMODE)
+					System.out.println("DEBUG: Normalized user rank: " + newRank);
+				// user.setRank(newRank);
+				pr.updateValue(userId, newRank);
+				hits[i].score = (float) (hits[i].score * user.getRank());
+				if (SearchEngine.DEBUGMODE)
+					System.out.println("DEBUG: Final Score: " + hits[i].score);
+				if (SearchEngine.DEBUGMODE)
+					System.out.println("--/--");
+			}
+			// Calculate normalized final score
+		}
+
+		// Sort array at the end
+		Arrays.sort(hits, new Comparator<ScoreDoc>() {
+			@Override
+			public int compare(ScoreDoc o1, ScoreDoc o2) {
+				return Float.compare(o2.score, o1.score);
+			}
+		});
+		// for (ScoreDoc hit : hits) {
+		// System.out.println(hit.score);
+		// }
+	}
 }
