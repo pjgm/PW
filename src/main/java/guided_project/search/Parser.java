@@ -16,8 +16,10 @@ import java.util.*;
 
 class Parser {
 
-    private static final String QUESTIONS_PATH = "Questions.csv";
-    private static final String ANSWERS_PATH = "Answers.csv";
+    private static final String OFFLINEQUESTIONS_PATH = "src/main/java/guided_project/data/Questions.csv";
+    private static final String OFFLINEANSWERS_PATH = "src/main/java/guided_project/data/Answers.csv";
+    private static final String KAGGLEQUESTIONS_PATH = "src/main/java/guided_project/data/Questions.csv";
+    private static final String KAGGLEANSWERS_PATH = "src/main/java/guided_project/data/Answers.csv";
     private static final int QUESTION = 0;
     private static final int ANSWER = 1;
 
@@ -30,8 +32,13 @@ class Parser {
         answers = new ArrayList<>();
 
         try {
-            parseFile(QUESTIONS_PATH, QUESTION);
-            parseFile(ANSWERS_PATH, ANSWER);
+        	if(SearchEngine.KAGGLEMODE) {
+        		parseFile(KAGGLEQUESTIONS_PATH, QUESTION);
+        		parseFile(KAGGLEANSWERS_PATH, ANSWER);
+        	} else {
+        		parseFile(OFFLINEQUESTIONS_PATH, QUESTION);
+        		parseFile(OFFLINEANSWERS_PATH, ANSWER);
+        	}
             createGraph();
         } catch (IOException | ParseException e) {
             System.err.println("Error parsing file.");

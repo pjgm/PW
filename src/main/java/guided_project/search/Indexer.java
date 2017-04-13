@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.lucene.document.Document;
@@ -33,13 +33,10 @@ import guided_project.graph.EdgeWeightedDigraph;
 import guided_project.model.Answer;
 import guided_project.model.User;
 
-import guided_project.search.SearchEngine;
-
 class Indexer {
 
 	private static double alfa = 0.5;
-	private static String indexPath = "index";
-	private static String queriesPath = "src/main/java/lab0/evaluation/queries.txt";
+	//private static String queriesPath = "src/main/java/lab0/evaluation/queries.txt";
 
 	IndexWriter openIndex(Analyzer analyzer) throws IOException {
 		IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
@@ -47,7 +44,7 @@ class Indexer {
 															// instead of
 															// appending to
 															// existing index
-		Directory dir = FSDirectory.open(Paths.get(indexPath));
+		Directory dir = FSDirectory.open(Paths.get(SearchEngine.INDEXPATH));
 		return new IndexWriter(dir, iwc);
 	}
 
@@ -77,15 +74,24 @@ class Indexer {
 	}
 
 	void parseQueries(Analyzer analyzer, PageRank pr) throws IOException, ParseException {
-		PrintWriter writer = new PrintWriter("output.txt", "UTF-8");
+		PrintWriter writer; BufferedReader br;
+		
+		if(SearchEngine.KAGGLEMODE){
+			br = new BufferedReader(new FileReader(SearchEngine.KAGGLEQUERIES));
+			writer = new PrintWriter(SearchEngine.KAGGLERESULTS, SearchEngine.CHARSET);
+			writer.write(SearchEngine.KAGGLEHEADER);
+		} else {
+			br = new BufferedReader(new FileReader(SearchEngine.OFFLINEQUERIES));
+			writer = new PrintWriter(SearchEngine.OFFLINERESULTS, SearchEngine.CHARSET);
+			writer.write(SearchEngine.OFFLINEHEADER);
+		}
 
-		BufferedReader br = new BufferedReader(new FileReader(queriesPath));
 		String line;
-
 		while ((line = br.readLine()) != null) {
 			String[] parts = line.split(":", 2);
 			searchQuery(writer, analyzer, pr, parts[0], parts[1]);
 		}
+		
 		br.close();
 		writer.flush();
 		writer.close();
@@ -94,13 +100,13 @@ class Indexer {
 	private void searchQuery(PrintWriter writer, Analyzer analyzer, PageRank pr, String queryID, String queryStr)
 			throws IOException, ParseException {
 
-		IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
+		IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(SearchEngine.INDEXPATH)));
 
 		IndexSearcher searcher = new IndexSearcher(reader);
 		// searcher.setSimilarity(new ClassicSimilarity());
 		QueryParser parser = new QueryParser("Body", analyzer);
 
-		Query query = parser.parse(queryStr);
+		Query query = parser.parse(QueryParser.escape(queryStr));
 
 		TopDocs results = searcher.search(query, 100);
 		ScoreDoc[] hits = results.scoreDocs;
@@ -117,19 +123,27 @@ class Indexer {
 
 		computeCombinedScore(hits, pr, searcher, results.getMaxScore(), hits[99].score);
 
+		if(SearchEngine.KAGGLEMODE)
+			writer.write("\""+queryID+"\",\"");
+		
 		int rank = 1;
-
 		for (ScoreDoc hit : hits) {
 			Document doc = searcher.doc(hit.doc);
-			if (SearchEngine.KAGGLEMODE) {
+			String runId = analyzer.getClass().getSimpleName() + "-" + new Date().toString();
+			if (SearchEngine.KAGGLEMODE){
+				writer.write(doc.getField("Id").numericValue().intValue() + " ");
+				rank++;
 			} else {
-				writer.println(queryID + "\t" + "Q0" + "\t" + doc.getField("Id").numericValue().intValue() + "\t"
-						+ rank++ + "\t" + hit.score + "\t" + "run-1");
+				writer.write(queryID + "\t" + "Q0" + "\t" + doc.getField("Id").numericValue().intValue() + "\t" + rank++
+						+ "\t" + hit.score + "\t" + runId + "\n");
 			}
 			
 			if (rank > 10)
 				break;
 		}
+		
+		if(SearchEngine.KAGGLEMODE)
+			writer.write("\"\n");
 	}
 
 	private void computeCombinedScore(ScoreDoc[] hits, PageRank pr, IndexSearcher searcher, float docMaxScore,

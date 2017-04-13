@@ -7,8 +7,16 @@ import org.apache.lucene.queryparser.classic.ParseException;
 
 public class SearchEngine {
 	
-	public static final boolean DEBUGMODE = false;
-	public static final boolean KAGGLEMODE = false;
+	public static final boolean DEBUGMODE = true;
+	public static final boolean KAGGLEMODE = true;
+	public static final String OFFLINEQUERIES = "src/main/java/guided_project/data/queries.offline.txt";
+	public static final String OFFLINERESULTS = "src/main/java/guided_project/results/offline.txt";
+	public static final String KAGGLEQUERIES = "src/main/java/guided_project/data/queries.kaggle.txt";
+	public static final String KAGGLERESULTS = "src/main/java/guided_project/results/kaggle.csv";
+	public static final String INDEXPATH = "index";
+	public static final String CHARSET = "UTF-8";
+	public static final String OFFLINEHEADER = "QueryID\tX\tDocID\tRank\tScore\t\tRunID\n";
+	public static final String KAGGLEHEADER= "\"ID\",\"AnswerID\"\n";
 
     public static void main(String args[]) {
 
