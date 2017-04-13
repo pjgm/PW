@@ -1,11 +1,11 @@
 package guided_project.search;
 
-import graph.EdgeWeightedDigraph;
-import model.Answer;
-import model.Question;
-
 import org.jsoup.Jsoup;
 import org.jsoup.examples.HtmlToPlainText;
+
+import guided_project.graph.EdgeWeightedDigraph;
+import guided_project.model.Answer;
+import guided_project.model.Question;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

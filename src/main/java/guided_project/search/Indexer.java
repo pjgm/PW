@@ -26,15 +26,16 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
-import graph.EdgeWeightedDigraph;
-import model.Answer;
-import model.User;
+import guided_project.graph.EdgeWeightedDigraph;
+import guided_project.model.Answer;
+import guided_project.model.User;
+
 
 class Indexer {
 
     private static double alfa = 0.5;
     private static String indexPath = "index";
-    private static String queriesPath = "src\main\java\lab0\evaluation\queries.txt";
+    private static String queriesPath = "src/main/java/lab0/evaluation/queries.txt";
 
     IndexWriter openIndex(Analyzer analyzer) throws IOException {
         IndexWriterConfig iwc = new IndexWriterConfig(analyzer);

@@ -1,11 +1,11 @@
 package guided_project.graph;
 
-import model.User;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+
+import guided_project.model.User;
 
 public class EdgeWeightedDigraph {
 

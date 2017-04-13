@@ -1,9 +1,10 @@
 package guided_project.search;
 
-import graph.EdgeWeightedDigraph;
-import model.User;
 
 import java.util.LinkedList;
+
+import guided_project.graph.EdgeWeightedDigraph;
+import guided_project.model.User;
 
 public class PageRank {
 
