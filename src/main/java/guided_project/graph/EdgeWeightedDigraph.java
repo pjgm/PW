@@ -39,8 +39,11 @@ public class EdgeWeightedDigraph {
     }
 
     public void addEdge(int src, int dst) {
+    	//src = answer
         LinkedList<Integer> srcOutLinks = outLinks.get(adj.get(src));
         srcOutLinks.add(dst);
+        
+        //dst = question
         LinkedList<Integer> dstInLinks = inlinks.get(adj.get(dst));
         dstInLinks.add(src);
         numOfEdges++;

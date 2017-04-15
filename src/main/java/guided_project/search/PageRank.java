@@ -7,7 +7,6 @@ import guided_project.model.User;
 
 public class PageRank {
 
-	public static final int INITIAL_RANK = 1;
 	static final double DAMPING = 0.85;
 	static final int ITERATIONS = 10;
 	private double maxValue = Double.MIN_VALUE;
@@ -41,6 +40,7 @@ public class PageRank {
 				this.updateValue(i.getId(), newRank, lastIteration); 
 			}
 		}
+		
 		if (SearchEngine.DEBUGMODE) {
 			System.out.println("DEBUG Max PageRank Before Normalization: " + getMaxValue());
 			System.out.println("DEBUG Min PageRank Before Normalization: " + getMinValue());

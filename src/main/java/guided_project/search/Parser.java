@@ -25,11 +25,11 @@ class Parser {
 
     private EdgeWeightedDigraph graph;
     private Map<Integer, Question> questions;
-    private List<Answer> answers;
+    private Map<Integer, Answer> answers;
 
     public Parser() {
         questions = new HashMap<>();
-        answers = new ArrayList<>();
+        answers = new HashMap<>();
 
         try {
         	if(SearchEngine.KAGGLEMODE) {
@@ -48,14 +48,27 @@ class Parser {
 
     private void createGraph() {
         this.graph = new EdgeWeightedDigraph();
-        for(Answer a : answers) {
+        for(Answer a : answers.values()) {
             Question q = questions.get(a.getParentId());
             if(q == null) {
                 continue;
             }
-            //question -> answer
-            int src = q.getOwnerUserId();
-            int dst = a.getOwnerUserId();
+            //answer -> question
+            int src = a.getOwnerUserId();
+            int dst = q.getOwnerUserId();
+            graph.addVertex(src);
+            graph.addVertex(dst);
+            graph.addEdge(src, dst);
+        }
+        
+        for(Question q : questions.values()) {
+            Answer a = answers.get(q.getOwnerUserId());
+            if(a == null) {
+                continue;
+            }
+            //answer -> question
+            int src = a.getOwnerUserId();
+            int dst = q.getOwnerUserId();
             graph.addVertex(src);
             graph.addVertex(dst);
             graph.addEdge(src, dst);
@@ -108,7 +121,7 @@ class Parser {
 
         Date creationDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(parts[2]);
 
-        String body = new HtmlToPlainText().getPlainText(Jsoup.parse(parts[5]));
+        String body = parts[5];//new HtmlToPlainText().getPlainText(Jsoup.parse(parts[5]));
 
         if (type == QUESTION) {
             int score = Integer.parseInt(parts[3]);
@@ -118,14 +131,14 @@ class Parser {
         else if (type == ANSWER) {
             int parentId = Integer.parseInt(parts[3]);
             int score = Integer.parseInt(parts[4]);
-            answers.add(new Answer(id, ownerUserId, creationDate, parentId, score, body));
+            answers.put(id, new Answer(id, ownerUserId, creationDate, parentId, score, body));
         }
         else
             System.err.println("type not defined");
     }
 
     List<Answer> getAnswers() {
-        return answers;
+        return new ArrayList<>(answers.values());
     }
 
 }

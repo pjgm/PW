@@ -35,7 +35,7 @@ import guided_project.model.User;
 
 class Indexer {
 
-	private static double alfa = 0.65; //1 - Only Lucene 0 - Only pageRank
+	private static double alfa = 1; //1 - Only Lucene 0 - Only pageRank
 
 	IndexWriter openIndex(Analyzer analyzer) throws IOException {
 		IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
