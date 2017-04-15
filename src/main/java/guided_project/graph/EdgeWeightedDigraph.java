@@ -26,7 +26,7 @@ public class EdgeWeightedDigraph {
 
     public void addVertex(int id) {
         if (!adj.containsKey(id)) {
-            User u = new User();
+            User u = new User(id);
             adj.put(id, u);
             inlinks.put(u, new LinkedList<Integer>());
             outLinks.put(u, new LinkedList<Integer>());

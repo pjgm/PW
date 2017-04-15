@@ -73,27 +73,28 @@ class Indexer {
 	}
 
 	void parseQueries(Analyzer analyzer, PageRank pr) throws IOException, ParseException {
-		PrintWriter writer; BufferedReader br;
-		
-		if(SearchEngine.KAGGLEMODE){
+		PrintWriter pw;
+		BufferedReader br;
+
+		if (SearchEngine.KAGGLEMODE) {
 			br = new BufferedReader(new FileReader(SearchEngine.KAGGLEQUERIES));
-			writer = new PrintWriter(SearchEngine.KAGGLERESULTS, SearchEngine.CHARSET);
-			writer.write(SearchEngine.KAGGLEHEADER);
+			pw = new PrintWriter(SearchEngine.KAGGLERESULTS, SearchEngine.CHARSET);
+			pw.write(SearchEngine.KAGGLEHEADER);
 		} else {
 			br = new BufferedReader(new FileReader(SearchEngine.OFFLINEQUERIES));
-			writer = new PrintWriter(SearchEngine.OFFLINERESULTS, SearchEngine.CHARSET);
-			writer.write(SearchEngine.OFFLINEHEADER);
+			pw = new PrintWriter(SearchEngine.OFFLINERESULTS, SearchEngine.CHARSET);
+			pw.write(SearchEngine.OFFLINEHEADER);
 		}
 
 		String line;
 		while ((line = br.readLine()) != null) {
 			String[] parts = line.split(":", 2);
-			searchQuery(writer, analyzer, pr, parts[0], parts[1]);
+			searchQuery(pw, analyzer, pr, parts[0], parts[1]);
 		}
-		
+
 		br.close();
-		writer.flush();
-		writer.close();
+		pw.flush();
+		pw.close();
 	}
 
 	private void searchQuery(PrintWriter writer, Analyzer analyzer, PageRank pr, String queryID, String queryStr)
@@ -109,10 +110,6 @@ class Indexer {
 
 		TopDocs results = searcher.search(query, 100);
 		ScoreDoc[] hits = results.scoreDocs;
-		if (SearchEngine.DEBUGMODE)
-			System.out.println("DEBUG: Max score from max score: " + results.getMaxScore());
-		if (SearchEngine.DEBUGMODE)
-			System.out.println("DEBUG: Min score from score doc array: " + hits[99].score);
 
 		int numTotalHits = results.totalHits;
 
@@ -120,33 +117,38 @@ class Indexer {
 		System.out.println("Query body " + queryStr);
 		System.out.println(numTotalHits + " total matching documents");
 
-		computeCombinedScore(hits, pr, searcher, results.getMaxScore(), hits[99].score);
+		if (SearchEngine.DEBUGMODE)
+			System.out.println("DEBUG: Max score from max score: " + results.getMaxScore());
+		if (SearchEngine.DEBUGMODE)
+			System.out.println("DEBUG: Min score from score doc array: " + hits[99].score);
 
-		if(SearchEngine.KAGGLEMODE)
-			writer.write("\""+queryID+"\",\"");
-		
+		computeCombinedScore(hits, pr, searcher, results.getMaxScore(), hits[99].score, pr.getMaxValue(), pr.getMinValue());
+
+		if (SearchEngine.KAGGLEMODE)
+			writer.write("\"" + queryID + "\",\"");
+
 		int rank = 1;
 		for (ScoreDoc hit : hits) {
 			Document doc = searcher.doc(hit.doc);
 			String runId = analyzer.getClass().getSimpleName() + "-" + new Date().toString();
-			if (SearchEngine.KAGGLEMODE){
+			if (SearchEngine.KAGGLEMODE) {
 				writer.write(doc.getField("Id").numericValue().intValue() + " ");
 				rank++;
 			} else {
 				writer.write(queryID + "\t" + "Q0" + "\t" + doc.getField("Id").numericValue().intValue() + "\t" + rank++
 						+ "\t" + hit.score + "\t" + runId + "\n");
 			}
-			
+
 			if (rank > 10)
 				break;
 		}
-		
-		if(SearchEngine.KAGGLEMODE)
+
+		if (SearchEngine.KAGGLEMODE)
 			writer.write("\"\n");
 	}
 
 	private void computeCombinedScore(ScoreDoc[] hits, PageRank pr, IndexSearcher searcher, float docMaxScore,
-			float docMinScore) throws IOException {
+			float docMinScore, double prMaxScore, double prMinScore) throws IOException {
 		EdgeWeightedDigraph graph = pr.getGraph();
 		for (int i = 0; i < hits.length; i++) {
 			// Normalization
@@ -155,19 +157,17 @@ class Indexer {
 				System.out.println("DEBUG: Normalized Doc score: " + hits[i].score);
 			int userId = (int) searcher.doc(hits[i].doc).getField("OwnerUserId").numericValue();
 			User user = graph.getVertex(userId);
-			double newRank = 0;
+			double userRank = 0;
 			if (user != null) {
-				newRank = (user.getRank() - pr.getMinValue()) / (pr.getMaxValue() - pr.getMinValue());
 				if (SearchEngine.DEBUGMODE)
-					System.out.println("DEBUG: Normalized user rank: " + newRank);
-				// user.setRank(newRank);
-				pr.updateValue(userId, newRank);
-				hits[i].score = (float) ((alfa*hits[i].score) * ((1-alfa)*user.getRank()));
-				if (SearchEngine.DEBUGMODE)
-					System.out.println("DEBUG: Final Score: " + hits[i].score);
-				if (SearchEngine.DEBUGMODE)
-					System.out.println("--/--");
+					System.out.println("DEBUG: Normalized user rank: " + user.getRank());
+				userRank = user.getRank();
 			}
+			hits[i].score = (float) ((alfa * hits[i].score) + ((1 - alfa) * userRank));
+			if (SearchEngine.DEBUGMODE)
+				System.out.println("DEBUG: Final Score: " + hits[i].score);
+			if (SearchEngine.DEBUGMODE)
+				System.out.println("--/--");
 			// Calculate normalized final score
 		}
 
@@ -178,8 +178,5 @@ class Indexer {
 				return Float.compare(o2.score, o1.score);
 			}
 		});
-		// for (ScoreDoc hit : hits) {
-		// System.out.println(hit.score);
-		// }
 	}
 }

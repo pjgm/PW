@@ -41,6 +41,14 @@ public class PageRank {
                 	maxValue = newRank;
             }
         }
+        normalize(maxValue, minValue);
+    }
+    
+    private void normalize(double maxValue, double minValue){
+    	for(User u : graph.getUsers()) {
+			double newRank = (u.getRank() - minValue) / (maxValue - minValue);
+			this.updateValue(u.getId(), newRank);
+    	}
     }
 
     EdgeWeightedDigraph getGraph() {
