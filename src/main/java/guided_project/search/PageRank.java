@@ -25,32 +25,41 @@ public class PageRank {
 	public void computePageRank(int iterations) {
 		for (int x = 0; x < iterations; x++) {
 			for (User i : graph.getUsers()) {
+				double newRank;
 				if (x == 0) {
-					i.setRank(1 / (double) graph.getNumOfVertex());
+					newRank = 1 / (double) graph.getNumOfVertex();
 				} else {
 					double sum = 0;
 					for (int j : graph.getInLinks(i)) {
 						LinkedList<Integer> outLinks = graph.getOutLinks(graph.getVertex(j));
 						sum += graph.getVertex(j).getRank() / (double) outLinks.size();
 					}
-					double newRank = ((1 - DAMPING) / graph.getNumOfVertex()) + (DAMPING * sum);
-					i.setRank(newRank);
-
-					if (newRank < minValue)
-						minValue = newRank;
-					
-					if (newRank > maxValue)
-						maxValue = newRank;
+					newRank = ((1 - DAMPING) / graph.getNumOfVertex()) + (DAMPING * sum);
 				}
+				
+				boolean lastIteration = (x == iterations-1);
+				this.updateValue(i.getId(), newRank, lastIteration); 
 			}
 		}
+		if (SearchEngine.DEBUGMODE) {
+			System.out.println("DEBUG Max PageRank Before Normalization: " + getMaxValue());
+			System.out.println("DEBUG Min PageRank Before Normalization: " + getMinValue());
+		}
+
 		normalize(maxValue, minValue);
+
+		if (SearchEngine.DEBUGMODE) {
+			System.out.println("DEBUG Max PageRank After Normalization: " + getMaxValue());
+			System.out.println("DEBUG Min PageRank After Normalization: " + getMinValue());
+		}
 	}
 
 	private void normalize(double maxValue, double minValue) {
+		this.maxValue = Double.MIN_VALUE;
+		this.minValue = Double.MAX_VALUE;
 		for (User u : graph.getUsers()) {
 			double newRank = (u.getRank() - minValue) / (maxValue - minValue);
-			this.updateValue(u.getId(), newRank);
+			this.updateValue(u.getId(), newRank, true);
 		}
 	}
 
@@ -66,11 +75,15 @@ public class PageRank {
 		return maxValue;
 	}
 
-	public void updateValue(int id, double value) {
-		if (value < minValue)
-			minValue = value;
-		if (value > maxValue)
-			maxValue = value;
+	public void updateValue(int id, double value, boolean updateMinMax) {
+		if (updateMinMax) {
+			if (value < minValue)
+				minValue = value;
+
+			if (value > maxValue)
+				maxValue = value;
+		}
+		
 		User user = graph.getVertex(id);
 		user.setRank(value);
 		graph.updateUser(id, user);

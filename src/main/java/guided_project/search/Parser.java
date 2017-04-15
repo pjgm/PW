@@ -53,6 +53,7 @@ class Parser {
             if(q == null) {
                 continue;
             }
+            //question -> answer
             int src = q.getOwnerUserId();
             int dst = a.getOwnerUserId();
             graph.addVertex(src);

@@ -35,7 +35,7 @@ import guided_project.model.User;
 
 class Indexer {
 
-	private static double alfa = 0.6;
+	private static double alfa = 0.65; //1 - Only Lucene 0 - Only pageRank
 
 	IndexWriter openIndex(Analyzer analyzer) throws IOException {
 		IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
@@ -151,7 +151,7 @@ class Indexer {
 			float docMinScore, double prMaxScore, double prMinScore) throws IOException {
 		EdgeWeightedDigraph graph = pr.getGraph();
 		for (int i = 0; i < hits.length; i++) {
-			// Normalization
+			// Score Normalization
 			hits[i].score = (hits[i].score - docMinScore) / (docMaxScore - docMinScore);
 			if (SearchEngine.DEBUGMODE)
 				System.out.println("DEBUG: Normalized Doc score: " + hits[i].score);
