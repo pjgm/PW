@@ -35,7 +35,7 @@ import guided_project.model.User;
 
 class Indexer {
 
-	private static double alfa = 0.5;
+	private static double alfa = 0.6;
 
 	IndexWriter openIndex(Analyzer analyzer) throws IOException {
 		IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
