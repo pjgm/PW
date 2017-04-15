@@ -59,7 +59,7 @@ class Parser {
             int dst = q.getOwnerUserId();
             graph.addVertex(src);
             graph.addVertex(dst);
-            graph.addEdge(src, dst);
+            graph.addEdge(src, a.getScore(), dst, q.getScore());
         }
         
         for(Question q : questions.values()) {
@@ -72,7 +72,7 @@ class Parser {
             int dst = q.getOwnerUserId();
             graph.addVertex(src);
             graph.addVertex(dst);
-            graph.addEdge(src, dst);
+            graph.addEdge(src, a.getScore(), dst, q.getScore());
         }
     }
 
@@ -122,9 +122,7 @@ class Parser {
 
         Date creationDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(parts[2]);
 
-//        String body = parts[5];
         String body = new HtmlToPlainText().getPlainText(Jsoup.parseBodyFragment(parts[5]));
-//          System.out.println(body);
 
         if (type == QUESTION) {
             int score = Integer.parseInt(parts[3]);

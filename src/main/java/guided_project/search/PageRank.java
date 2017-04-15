@@ -3,6 +3,7 @@ package guided_project.search;
 import java.util.LinkedList;
 
 import guided_project.graph.EdgeWeightedDigraph;
+import guided_project.model.Edge;
 import guided_project.model.User;
 
 public class PageRank {
@@ -29,9 +30,9 @@ public class PageRank {
 					newRank = 1 / (double) graph.getNumOfVertex();
 				} else {
 					double sum = 0;
-					for (int j : graph.getInLinks(i)) {
-						LinkedList<Integer> outLinks = graph.getOutLinks(graph.getVertex(j));
-						sum += graph.getVertex(j).getRank() / (double) outLinks.size();
+					for (Edge j : graph.getInLinks(i)) {
+						LinkedList<Edge> outLinks = graph.getOutLinks(graph.getVertex(j.getId()));
+						sum += graph.getVertex(j.getId()).getRank() / (double) outLinks.size();
 					}
 					newRank = ((1 - DAMPING) / graph.getNumOfVertex()) + (DAMPING * sum);
 				}
