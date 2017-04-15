@@ -1,5 +1,6 @@
 package guided_project.search;
 
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.jsoup.Jsoup;
 import org.jsoup.examples.HtmlToPlainText;
 
@@ -121,7 +122,9 @@ class Parser {
 
         Date creationDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(parts[2]);
 
-        String body = parts[5];//new HtmlToPlainText().getPlainText(Jsoup.parse(parts[5]));
+//        String body = parts[5];
+        String body = new HtmlToPlainText().getPlainText(Jsoup.parseBodyFragment(parts[5]));
+//          System.out.println(body);
 
         if (type == QUESTION) {
             int score = Integer.parseInt(parts[3]);

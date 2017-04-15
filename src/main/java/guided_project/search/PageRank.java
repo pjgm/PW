@@ -7,7 +7,7 @@ import guided_project.model.User;
 
 public class PageRank {
 
-	static final double DAMPING = 0.85;
+	static final double DAMPING = 0.70;
 	static final int ITERATIONS = 10;
 	private double maxValue = Double.MIN_VALUE;
 	private double minValue = Double.MAX_VALUE;

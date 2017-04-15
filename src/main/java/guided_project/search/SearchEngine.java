@@ -8,7 +8,7 @@ import org.apache.lucene.queryparser.classic.ParseException;
 public class SearchEngine {
 	
 	public static final boolean DEBUGMODE = false;
-	public static final boolean KAGGLEMODE = true;
+	public static final boolean KAGGLEMODE = false;
 	public static final String OFFLINEQUERIES = "src/main/java/guided_project/data/queries.offline.txt";
 	public static final String OFFLINERESULTS = "src/main/java/guided_project/results/offline.txt";
 	public static final String KAGGLEQUERIES = "src/main/java/guided_project/data/queries.kaggle.txt";
