@@ -1,4 +1,4 @@
-package guided_project.model;
+package guided_project.graph;
 
 public class Edge {
 

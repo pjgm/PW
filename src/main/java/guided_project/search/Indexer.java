@@ -103,7 +103,6 @@ class Indexer {
 		IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(SearchEngine.INDEXPATH)));
 
 		IndexSearcher searcher = new IndexSearcher(reader);
-		// searcher.setSimilarity(new ClassicSimilarity());
 		QueryParser parser = new QueryParser("Body", analyzer);
 
 		Query query = parser.parse(QueryParser.escape(queryStr));

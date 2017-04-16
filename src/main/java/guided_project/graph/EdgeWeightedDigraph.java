@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import guided_project.model.Edge;
 import guided_project.model.User;
 
 public class EdgeWeightedDigraph {

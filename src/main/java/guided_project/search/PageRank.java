@@ -2,8 +2,8 @@ package guided_project.search;
 
 import java.util.LinkedList;
 
+import guided_project.graph.Edge;
 import guided_project.graph.EdgeWeightedDigraph;
-import guided_project.model.Edge;
 import guided_project.model.User;
 
 public class PageRank {
