@@ -8,8 +8,6 @@ import guided_project.model.User;
 
 public class PageRank {
 
-	static final double DAMPING = 0.70;
-	static final int ITERATIONS = 10;
 	private double maxValue = Double.MIN_VALUE;
 	private double minValue = Double.MAX_VALUE;
 
@@ -19,7 +17,7 @@ public class PageRank {
 	public PageRank() {
 		parser = new Parser();
 		graph = parser.getGraph();
-		computePageRank(ITERATIONS);
+		computePageRank(Properties.ITERATIONS);
 	}
 
 	public void computePageRank(int iterations) {
@@ -34,7 +32,7 @@ public class PageRank {
 						LinkedList<Edge> outLinks = graph.getOutLinks(graph.getVertex(j.getId()));
 						sum += graph.getVertex(j.getId()).getRank() / (double) outLinks.size();
 					}
-					newRank = ((1 - DAMPING) / graph.getNumOfVertex()) + (DAMPING * sum);
+					newRank = ((1 - Properties.DAMPING) / graph.getNumOfVertex()) + (Properties.DAMPING * sum);
 				}
 				
 				boolean lastIteration = (x == iterations-1);
@@ -42,14 +40,14 @@ public class PageRank {
 			}
 		}
 		
-		if (SearchEngine.DEBUGMODE) {
+		if (Properties.DEBUGMODE) {
 			System.out.println("DEBUG Max PageRank Before Normalization: " + getMaxValue());
 			System.out.println("DEBUG Min PageRank Before Normalization: " + getMinValue());
 		}
 
 		normalize(maxValue, minValue);
 
-		if (SearchEngine.DEBUGMODE) {
+		if (Properties.DEBUGMODE) {
 			System.out.println("DEBUG Max PageRank After Normalization: " + getMaxValue());
 			System.out.println("DEBUG Min PageRank After Normalization: " + getMinValue());
 		}

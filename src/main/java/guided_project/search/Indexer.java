@@ -35,15 +35,13 @@ import guided_project.model.User;
 
 class Indexer {
 
-	private static double alfa = 0.5; //1 - Only Lucene 0 - Only pageRank
-
 	IndexWriter openIndex(Analyzer analyzer) throws IOException {
 		IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
 		iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE); // create new index
 															// instead of
 															// appending to
 															// existing index
-		Directory dir = FSDirectory.open(Paths.get(SearchEngine.INDEXPATH));
+		Directory dir = FSDirectory.open(Paths.get(Properties.INDEXPATH));
 		return new IndexWriter(dir, iwc);
 	}
 
@@ -76,14 +74,14 @@ class Indexer {
 		PrintWriter pw;
 		BufferedReader br;
 
-		if (SearchEngine.KAGGLEMODE) {
-			br = new BufferedReader(new FileReader(SearchEngine.KAGGLEQUERIES));
-			pw = new PrintWriter(SearchEngine.KAGGLERESULTS, SearchEngine.CHARSET);
-			pw.write(SearchEngine.KAGGLEHEADER);
+		if (Properties.KAGGLEMODE) {
+			br = new BufferedReader(new FileReader(Properties.KAGGLEQUERIES));
+			pw = new PrintWriter(Properties.KAGGLERESULTS, Properties.CHARSET);
+			pw.write(Properties.KAGGLEHEADER);
 		} else {
-			br = new BufferedReader(new FileReader(SearchEngine.OFFLINEQUERIES));
-			pw = new PrintWriter(SearchEngine.OFFLINERESULTS, SearchEngine.CHARSET);
-			pw.write(SearchEngine.OFFLINEHEADER);
+			br = new BufferedReader(new FileReader(Properties.OFFLINEQUERIES));
+			pw = new PrintWriter(Properties.OFFLINERESULTS, Properties.CHARSET);
+			pw.write(Properties.OFFLINEHEADER);
 		}
 
 		String line;
@@ -100,7 +98,7 @@ class Indexer {
 	private void searchQuery(PrintWriter writer, Analyzer analyzer, PageRank pr, String queryID, String queryStr)
 			throws IOException, ParseException {
 
-		IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(SearchEngine.INDEXPATH)));
+		IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(Properties.INDEXPATH)));
 
 		IndexSearcher searcher = new IndexSearcher(reader);
 		QueryParser parser = new QueryParser("Body", analyzer);
@@ -116,21 +114,21 @@ class Indexer {
 		System.out.println("Query body " + queryStr);
 		System.out.println(numTotalHits + " total matching documents");
 
-		if (SearchEngine.DEBUGMODE)
+		if (Properties.DEBUGMODE)
 			System.out.println("DEBUG: Max score from max score: " + results.getMaxScore());
-		if (SearchEngine.DEBUGMODE)
+		if (Properties.DEBUGMODE)
 			System.out.println("DEBUG: Min score from score doc array: " + hits[99].score);
 
 		computeCombinedScore(hits, pr, searcher, results.getMaxScore(), hits[99].score, pr.getMaxValue(), pr.getMinValue());
 
-		if (SearchEngine.KAGGLEMODE)
+		if (Properties.KAGGLEMODE)
 			writer.write("\"" + queryID + "\",\"");
 
 		int rank = 1;
 		for (ScoreDoc hit : hits) {
 			Document doc = searcher.doc(hit.doc);
 			String runId = analyzer.getClass().getSimpleName() + "-" + new Date().toString();
-			if (SearchEngine.KAGGLEMODE) {
+			if (Properties.KAGGLEMODE) {
 				writer.write(doc.getField("Id").numericValue().intValue() + " ");
 				rank++;
 			} else {
@@ -142,7 +140,7 @@ class Indexer {
 				break;
 		}
 
-		if (SearchEngine.KAGGLEMODE)
+		if (Properties.KAGGLEMODE)
 			writer.write("\"\n");
 	}
 
@@ -152,20 +150,20 @@ class Indexer {
 		for (int i = 0; i < hits.length; i++) {
 			// Score Normalization
 			hits[i].score = (hits[i].score - docMinScore) / (docMaxScore - docMinScore);
-			if (SearchEngine.DEBUGMODE)
+			if (Properties.DEBUGMODE)
 				System.out.println("DEBUG: Normalized Doc score: " + hits[i].score);
 			int userId = (int) searcher.doc(hits[i].doc).getField("OwnerUserId").numericValue();
 			User user = graph.getVertex(userId);
 			double userRank = 0;
 			if (user != null) {
-				if (SearchEngine.DEBUGMODE)
+				if (Properties.DEBUGMODE)
 					System.out.println("DEBUG: Normalized user rank: " + user.getRank());
 				userRank = user.getRank();
 			}
-			hits[i].score = (float) ((alfa * hits[i].score) + ((1 - alfa) * userRank));
-			if (SearchEngine.DEBUGMODE)
+			hits[i].score = (float) ((Properties.ALFA * hits[i].score) + ((1 - Properties.ALFA) * userRank));
+			if (Properties.DEBUGMODE)
 				System.out.println("DEBUG: Final Score: " + hits[i].score);
-			if (SearchEngine.DEBUGMODE)
+			if (Properties.DEBUGMODE)
 				System.out.println("--/--");
 			// Calculate normalized final score
 		}
