@@ -23,12 +23,12 @@ class Parser {
     private EdgeWeightedDigraph graph;
     private Set<Integer> users;
     private Map<Integer, Question> questions;
-    private List<Answer> answers;
+    private Map<Integer, Answer> answers;
 
     Parser() {
         users = new HashSet<>();
         questions = new HashMap<>();
-        answers = new ArrayList<>();
+        answers = new HashMap<>();
 
         try {
             parseFile(QUESTIONS_PATH, QUESTION);
@@ -40,17 +40,34 @@ class Parser {
     }
 
     private void createGraph() {
+        int sinkCount = 0;
+        int sameCount = 0;
         this.graph = new EdgeWeightedDigraph();
-        for(Answer a : answers) {
+        for(Answer a : answers.values()) {
             Question q = questions.get(a.getParentId());
-            if(q == null) {
+            if (q == null) {
                 continue;
             }
             int src = q.getOwnerUserId();
             int dst = a.getOwnerUserId();
+
+            if (src == dst) {
+                sameCount++;
+                System.out.println("Same user");
+                continue;
+            }
+
             graph.addVertex(src);
             graph.addVertex(dst);
-            graph.addEdge(src, dst);
+            graph.addEdge(src, dst); // question -> answer
+
+            if (!questions.containsKey(dst)) { // it's a sink
+                sinkCount++;
+                graph.addEdge(dst, src);
+            }
+
+            System.out.println("nr of users who responded to own question: " + sameCount);
+            System.out.println("nr of sinks: " + sinkCount);
         }
     }
 
@@ -109,13 +126,13 @@ class Parser {
         else if (type == ANSWER) {
             int parentId = Integer.parseInt(parts[3]);
             int score = Integer.parseInt(parts[4]);
-            answers.add(new Answer(id, ownerUserId, creationDate, parentId, score, body));
+            answers.put(id, new Answer(id, ownerUserId, creationDate, parentId, score, body));
         }
         else
             System.err.println("type not defined");
     }
 
-    List<Answer> getAnswers() {
+    Map<Integer, Answer> getAnswers() {
         return answers;
     }
 

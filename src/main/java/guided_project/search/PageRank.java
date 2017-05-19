@@ -4,6 +4,7 @@ import guided_project.graph.EdgeWeightedDigraph;
 import guided_project.model.User;
 
 import java.util.LinkedList;
+import java.util.Set;
 
 public class PageRank {
 
@@ -20,6 +21,12 @@ public class PageRank {
             u.setRank(1/(double)graph.V());
         }
         computePageRank(ITERATIONS);
+
+        double sum = 0;
+        for (User u: graph.getUsers()) {
+            sum += u.getRank();
+        }
+        System.out.println(sum);
     }
 
     public void computePageRank(int iterations) {
@@ -27,13 +34,17 @@ public class PageRank {
             for(User u : graph.getUsers()) {
                 double sum = 0;
                 for (int e : graph.getInLinks(u)) {
-                    LinkedList outLinks = graph.getOutLinks(graph.getVertex(e));
-                    sum += graph.getVertex(e).getRank() / (double)outLinks.size();
+                    Set outLinks = graph.getOutLinks(graph.getVertex(e));
+                    sum += graph.getVertex(e).getRank() / (double) outLinks.size();
                 }
-                double newRank = ((1 - DAMPING) / graph.V()) + (DAMPING * sum);
+                double newRank = ((1 - DAMPING) / (double) graph.V()) + (DAMPING * sum);
                 u.setRank(newRank);
             }
         }
+    }
+
+    private void normalizePR() {
+
     }
 
     EdgeWeightedDigraph getGraph() {
