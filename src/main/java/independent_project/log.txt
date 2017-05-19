@@ -1,0 +1,2 @@
+Tweets dataset size: 28925
+Tweet fields that are always null or empty were ignored.

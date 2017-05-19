@@ -1,6 +1,6 @@
-package independent_project;
+package independent_project.parsing.tweet;
 
-public class Tweet {
+class Tweet {
 
     String created_at;
     long id; //always equal to id_str
@@ -14,13 +14,15 @@ public class Tweet {
 
     User user;
 
-    //String geo;
-    //String coordinates;
-    //String place;
-    String contributors;
+    Geolocation geo;
+    Coordinates coordinates;
+    Place place;
+    //String contributors; <- always null
     boolean is_quote_status;
     int retweet_count;
     int favorite_count;
+
+    Entities entities;
 
     boolean favorited;
     boolean retweeted;
