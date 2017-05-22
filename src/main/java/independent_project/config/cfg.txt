@@ -1,0 +1,6 @@
+#### THIS FILE CONTAINS FILE PATHS NEEDED FOR THE PROGRAM TO RUN ####
+TOPICS_PATH: src/main/java/independent_project/data/TREC2015-MB-noeval-topics-culled.json
+#TOPICS_PATH: src/main/java/independent_project/data/TREC2015-MB-eval-topics.json
+#TOPICS_PATH: src/main/java/independent_project/data/TREC2016-RTS-topics.json
+TWEETS_PATH: src/main/java/independent_project/data/tweets.jsonl
+INDEX_PATH: src/main/java/independent_project/index

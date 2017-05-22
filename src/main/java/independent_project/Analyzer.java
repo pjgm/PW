@@ -1,4 +1,4 @@
-package guided_project.search;
+package independent_project;
 
 import org.apache.lucene.analysis.*;
 import org.apache.lucene.analysis.en.PorterStemFilter;
@@ -63,4 +63,5 @@ public class Analyzer extends StopwordAnalyzerBase {
             System.out.println("Error reading from token stream");
         }
     }
+
 }
