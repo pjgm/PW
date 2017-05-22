@@ -2,7 +2,7 @@ package independent_project.model.twitter;
 
 public class Tweet {
 
-    public String created_at;
+    public String created_at; //TODO: change to Date object
     public long id; //always equal to id_str
     public String text;
     public String source;
