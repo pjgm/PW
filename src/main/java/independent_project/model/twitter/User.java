@@ -1,5 +1,7 @@
 package independent_project.model.twitter;
 
+import java.util.Date;
+
 public class User {
     public long id; //equals id_str
     public String name;
@@ -14,7 +16,7 @@ public class User {
     public int listed_count;
     public int favourites_count;
     public int statuses_count;
-    public String created_at;
+    public Date created_at;
     public int utc_offset;
     public String time_zone;
     public boolean geo_enabled;

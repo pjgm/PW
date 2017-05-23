@@ -2,7 +2,7 @@ package independent_project.config;
 
 public class Config {
 
-    private String tweetsPath, topicsPath, indexPath;
+    private String tweetsPath, topicsPath, indexPath, resultsPath;
 
     public String getTweetsPath() {
         return tweetsPath;
@@ -26,5 +26,13 @@ public class Config {
 
     public void setIndexPath(String indexPath) {
         this.indexPath = indexPath;
+    }
+
+    public String getResultsPath() {
+        return resultsPath;
+    }
+
+    public void setResultsPath(String resultsPath) {
+        this.resultsPath = resultsPath;
     }
 }

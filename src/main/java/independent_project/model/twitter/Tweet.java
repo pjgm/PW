@@ -1,8 +1,10 @@
 package independent_project.model.twitter;
 
+import java.util.Date;
+
 public class Tweet {
 
-    public String created_at; //TODO: change to Date object
+    public Date created_at;
     public long id; //always equal to id_str
     public String text;
     public String source;

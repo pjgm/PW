@@ -4,3 +4,4 @@ TOPICS_PATH: src/main/java/independent_project/data/TREC2015-MB-noeval-topics-cu
 #TOPICS_PATH: src/main/java/independent_project/data/TREC2016-RTS-topics.json
 TWEETS_PATH: src/main/java/independent_project/data/tweets.jsonl
 INDEX_PATH: src/main/java/independent_project/index
+RESULTS_PATH: src/main/java/independent_project/evaluation/results.txt

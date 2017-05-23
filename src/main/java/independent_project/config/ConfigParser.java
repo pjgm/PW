@@ -3,7 +3,6 @@ package independent_project.config;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Paths;
 
 public class ConfigParser {
 
@@ -34,7 +33,14 @@ public class ConfigParser {
                 break;
             case "index_path":
                 parseIndexPath(value, config);
+                break;
+            case "results_path":
+                parseResultsPath(value, config);
         }
+    }
+
+    private static void parseResultsPath(String value, Config config) {
+        config.setResultsPath(value);
     }
 
     private static void parseTopicsPath(String value, Config config) {

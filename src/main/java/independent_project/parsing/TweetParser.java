@@ -1,6 +1,7 @@
 package independent_project.parsing;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import independent_project.model.twitter.Tweet;
 
@@ -14,7 +15,8 @@ import java.util.List;
 public class TweetParser {
 
     public static List<Tweet> parseFile(String filePath) throws IOException {
-        Gson gson = new Gson();
+        //Sat Aug 06 12:39:04 +0000 2016
+        Gson gson = new GsonBuilder().setDateFormat("EEE MMM dd HH:mm:ss Z yyyy").create();
 
         String line;
         JsonReader reader;

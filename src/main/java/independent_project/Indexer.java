@@ -1,6 +1,7 @@
 package independent_project;
 
 import independent_project.model.interest_profile.Topic;
+import independent_project.model.runs.Run;
 import independent_project.model.twitter.Tweet;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
@@ -19,6 +20,7 @@ import org.apache.lucene.store.FSDirectory;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Indexer {
@@ -41,36 +43,65 @@ public class Indexer {
     void indexTweets(IndexWriter writer, List<Tweet> tweets) throws IOException {
         for (Tweet t: tweets) {
             Document doc = new Document();
-
             doc.add(new StoredField("id", t.id));
-            doc.add(new StringField("created_at", t.created_at, Field.Store.YES));
+
+            doc.add(new StringField("created_at", t.created_at.toString(), Field.Store.YES));
+
             doc.add(new TextField("text", t.text, Field.Store.YES));
+
             doc.add(new StringField("source", t.source, Field.Store.YES));
             // add more when needed
             writer.addDocument(doc);
         }
     }
 
-    void indexInterestTopics(List<Topic> topics) throws IOException, ParseException {
-        for (Topic t : topics) {
-            IndexReader reader = DirectoryReader.open(FSDirectory.open(indexPath));
+    List<Run> searchInterestTopics(List<Topic> topics, String day) throws IOException, ParseException {
 
-            IndexSearcher searcher = new IndexSearcher(reader);
-            searcher.setSimilarity(new ClassicSimilarity()); // TF-IDF
+        List<Run> runs = new ArrayList<>();
+        IndexReader reader = DirectoryReader.open(FSDirectory.open(indexPath));
 
-            QueryParser parser = new QueryParser("text", analyzer);
+        IndexSearcher searcher = new IndexSearcher(reader);
+        searcher.setSimilarity(new ClassicSimilarity()); // TF-IDF
 
-            Query query = parser.parse(t.title);
+        QueryParser parser = new QueryParser("text", analyzer); // only considering tweet text
 
-            TopDocs results = searcher.search(query, 10);
-            ScoreDoc[] hits = results.scoreDocs;
-
-            int numTotalHits = results.totalHits;
-
-            System.out.println("Query number " + t.topid);
-            System.out.println("Query body " + t.title);
-            System.out.println(numTotalHits + " total matching documents");
-
+        for (Topic topic : topics) {
+            List<Run> topicRuns = searchInterestTopic(topic, parser, searcher, day);
+            runs.addAll(topicRuns);
         }
+        return runs;
+    }
+
+    List<Run> searchInterestTopic(Topic topic, QueryParser parser, IndexSearcher searcher, String day) throws
+            ParseException, IOException {
+
+        List<Run> runs = new ArrayList<>();
+
+        Query query = parser.parse(topic.title); // TODO: Use description or narrative
+
+        System.out.println(query.toString());
+
+        TopDocs results = searcher.search(query, 10);
+        ScoreDoc[] hits = results.scoreDocs;
+
+        int numTotalHits = results.totalHits;
+
+        System.out.println("Query number: " + topic.topid);
+        System.out.println("Query body: " + topic.title);
+        System.out.println(numTotalHits + " total matching documents");
+
+        int rank = 1;
+
+        for (ScoreDoc hit : hits) {
+            Document doc = searcher.doc(hit.doc);
+
+            //String date = "YYYYMMDD"; //TODO: change to day for which result was calculated
+            long tweet_id = doc.getField("id").numericValue().longValue();
+
+            Run run = new Run(day, topic.topid, "Q0", tweet_id, rank++, hit.score, "run-1");
+            runs.add(run);
+        }
+
+        return runs;
     }
 }
