@@ -83,6 +83,8 @@ public class InterestProfileSearcher {
 
 
     public static void main(String args[]) throws IOException, ParseException {
+        Process p = Runtime.getRuntime().exec("python --version");
+
         new InterestProfileSearcher();
     }
 }

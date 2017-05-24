@@ -1,2 +1,6 @@
 Tweets dataset size: 28925
 Tweet fields that are always null or empty were ignored.
+
+Baseline -> querying using title, similarity tf-idf(?), search only on tweet text
+
+python2 rts2016-batchB-eval.py -q rts2016-qrels.txt -c rts2016-batch-clusters.json -t rts2016-batch-tweets2dayepoch.txt -r results.txt
