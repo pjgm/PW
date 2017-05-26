@@ -53,11 +53,12 @@ public class Indexer {
             // add more when needed
             writer.addDocument(doc);
         }
+        writer.commit();
     }
 
     List<Run> searchInterestTopics(List<Topic> topics, String day) throws IOException, ParseException {
 
-        List<Run> runs = new ArrayList<>();
+        List<Run> runs = new ArrayList<Run>();
         IndexReader reader = DirectoryReader.open(FSDirectory.open(indexPath));
 
         IndexSearcher searcher = new IndexSearcher(reader);

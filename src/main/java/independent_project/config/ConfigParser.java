@@ -6,6 +6,11 @@ import java.io.IOException;
 
 public class ConfigParser {
 
+    public static final String TOPICS_PATH = "topics_path";
+    public static final String TWEETS_PATH = "tweets_path";
+    public static final String INDEX_PATH = "index_path";
+    public static final String RESULTS_PATH = "results_path";
+
     public static Config parseFile(String configPath) throws IOException {
 
         BufferedReader br = new BufferedReader(new FileReader(configPath));
@@ -25,16 +30,16 @@ public class ConfigParser {
         String value = parts[1].trim();
 
         switch (field) {
-            case "topics_path":
+            case TOPICS_PATH:
                 parseTopicsPath(value, config);
                 break;
-            case "tweets_path":
+            case TWEETS_PATH:
                 parseTweetsPath(value, config);
                 break;
-            case "index_path":
+            case INDEX_PATH:
                 parseIndexPath(value, config);
                 break;
-            case "results_path":
+            case RESULTS_PATH:
                 parseResultsPath(value, config);
         }
     }

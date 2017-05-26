@@ -21,50 +21,57 @@ import java.util.List;
 
 public class InterestProfileSearcher {
 
-    public InterestProfileSearcher() throws IOException, ParseException {
-        Config config = ConfigParser.parseFile("src/main/java/independent_project/config/cfg.txt");
+    public InterestProfileSearcher() {
+        try {
+            Config config = ConfigParser.parseFile("src/main/java/independent_project/config/cfg.txt");
 
-        List<Tweet> tweets = TweetParser.parseFile(config.getTweetsPath());
-        List<Topic> topics = InterestParser.parseFile(config.getTopicsPath());
+            List<Tweet> tweets = TweetParser.parseFile(config.getTweetsPath());
+            List<Topic> topics = InterestParser.parseFile(config.getTopicsPath());
 
-        Collections.sort(tweets, Comparator.comparing(t -> t.created_at)); // orders the tweets by date (ascending)
+            Collections.sort(tweets, Comparator.comparing(t -> t.created_at)); // orders the tweets by date (ascending)
 
-        tweets.remove(0); // Mon Aug 01 19:51:04 WEST 2016
-        tweets.remove(tweets.size()-1); // Thu Aug 18 18:20:38 WEST 2016
+            tweets.remove(0); // Mon Aug 01 19:51:04 WEST 2016
+            tweets.remove(tweets.size() - 1); // Thu Aug 18 18:20:38 WEST 2016
 
-        Analyzer analyzer = new Analyzer();
-        Indexer indexer = new Indexer(Paths.get(config.getIndexPath()), analyzer);
-        IndexWriter iw = indexer.openIndex();
+            Analyzer analyzer = new Analyzer();
+            Indexer indexer = new Indexer(Paths.get(config.getIndexPath()), analyzer);
+            IndexWriter iw = indexer.openIndex();
+            //iw.commit();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
-        String day = dateFormat.format(tweets.get(0).created_at);
-        int initDayIndex = 0; // starting index for a given day
+            String day = dateFormat.format(tweets.get(0).created_at);
+            int initDayIndex = 0; // starting index for a given day
 
-        List<Run> runs = new ArrayList<>();
+            List<Run> runs = new ArrayList<Run>();
+            for (Tweet t : tweets) {
+                String currentDay = dateFormat.format(t.created_at);
+                if (currentDay.equals(day))
+                    continue;
+                int endDayIndex = tweets.indexOf(t); // ending index for a given day
+                indexTweets(indexer, iw, tweets.subList(initDayIndex, endDayIndex));
+                runs.addAll(searchTopics(indexer, topics, day));
+                day = currentDay;
+                initDayIndex = endDayIndex;
+            }
 
-        for (Tweet t: tweets) {
-            String currentDay = dateFormat.format(t.created_at);
-            if (currentDay.equals(day))
-                continue;
+            iw.close();
 
-            int endDayIndex = tweets.indexOf(t); // ending index for a given day
-            indexTweets(indexer, iw, tweets.subList(initDayIndex, endDayIndex));
-            runs.addAll(searchTopics(indexer, topics, day));
-            day = currentDay;
-            initDayIndex = endDayIndex;
+            PrintWriter pw = new PrintWriter(config.getResultsPath());
+
+            for (Run r : runs)
+                pw.println(r.toString());
+
+            pw.close();
+
+        } catch (IOException e) {
+            System.out.println("IO DEU COCO");
+            e.printStackTrace();
+        } catch (ParseException e){
+            System.out.println("PARSE DEU COCO");
+            e.printStackTrace();
         }
-
-        iw.close();
-
-        PrintWriter pw = new PrintWriter(config.getResultsPath());
-
-        for (Run r: runs)
-            pw.println(r.toString());
-
-        pw.close();
     }
-
     /**
      * Indexes a list of tweets
      */
