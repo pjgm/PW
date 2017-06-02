@@ -78,7 +78,7 @@ public class Indexer {
 
         List<Run> runs = new ArrayList<>();
 
-        Query query = parser.parse(topic.title); // TODO: Use description or narrative
+        Query query = parser.parse(QueryParser.escape(topic.title)); // TODO: Use description or narrative
 
         System.out.println(query.toString());
 
