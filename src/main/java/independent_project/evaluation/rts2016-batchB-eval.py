@@ -8,18 +8,36 @@ import argparse
 import json
 import numpy
 import math
+import sys
+
+#Added by Gustavo
+
+class Logger(object):
+    def __init__(self, outFileName):
+        self.terminal = sys.stdout
+        self.log = open(outFileName, "a")
+
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+
+    def flush(self):
+        pass
 
 parser = argparse.ArgumentParser(description='Evaluation script for TREC 2016 RTS scenario B with batch NIST assessor judgments')
 parser.add_argument('-q', required=True, metavar='qrels', help='batch qrels file')
 parser.add_argument('-c', required=True, metavar='clusters', help='cluster anotations')
 parser.add_argument('-t', required=True, metavar='tweetsdayepoch', help='tweets2dayepoch file')
 parser.add_argument('-r', required=True, metavar='run', help='run file')
+parser.add_argument('-o', required=True, metavar='output', help='output file')
 
 args = parser.parse_args()
 qrels_path = vars(args)['q']
 clusters_path = vars(args)['c']
 file_tweet2day = vars(args)['t']
 run_path = vars(args)['r']
+
+sys.stdout = Logger(vars(args)['o'])
 
 K = 10
 days = []

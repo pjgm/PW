@@ -14,7 +14,9 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.search.similarities.ClassicSimilarity;
+import org.apache.lucene.search.similarities.LMDirichletSimilarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
@@ -63,7 +65,11 @@ public class Indexer {
 
         IndexSearcher searcher = new IndexSearcher(reader);
         searcher.setSimilarity(new ClassicSimilarity()); // TF-IDF
+//        searcher.setSimilarity(new LMDirichletSimilarity()); // LMD
+//        searcher.setSimilarity(new BM25Similarity()); //BM25
 
+  
+        
         QueryParser parser = new QueryParser("text", analyzer); // only considering tweet text
 
         for (Topic topic : topics) {
@@ -78,7 +84,7 @@ public class Indexer {
 
         List<Run> runs = new ArrayList<>();
 
-        Query query = parser.parse(QueryParser.escape(topic.title)); // TODO: Use description or narrative
+        Query query = parser.parse(topic.title); // TODO: Use description or narrative
 
         System.out.println(query.toString());
 

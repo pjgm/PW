@@ -5,4 +5,5 @@ public class Topic {
     public String title;
     public String description;
     public String narrative;
+    public int interest;
 }

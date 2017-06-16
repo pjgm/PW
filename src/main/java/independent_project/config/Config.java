@@ -2,7 +2,7 @@ package independent_project.config;
 
 public class Config {
 
-    private String tweetsPath, topicsPath, indexPath, resultsPath;
+    private String tweetsPath, topicsPath, indexPath, resultsPath, qRelsPath, topQRelsPath;
 
     public String getTweetsPath() {
         return tweetsPath;
@@ -32,7 +32,19 @@ public class Config {
         return resultsPath;
     }
 
-    public void setResultsPath(String resultsPath) {
+	public void setResultsPath(String resultsPath) {
         this.resultsPath = resultsPath;
     }
+	
+	public String getQRelsPath() {
+		return qRelsPath;
+	}
+	
+	public void setQRelsPath(String qRelsPath) {
+		this.qRelsPath = qRelsPath;
+	}
+
+    public String getTopQRelsPath() { return topQRelsPath; }
+
+    public void setTopQRelsPath(String topQRelsPath) { this.topQRelsPath = topQRelsPath; }
 }
