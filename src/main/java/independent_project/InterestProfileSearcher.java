@@ -49,7 +49,7 @@ public class InterestProfileSearcher {
 
 			List<Run> runs = new ArrayList<Run>();
 			if (indexAllTweets) {
-				indexTweets(indexer, iw, tweets);
+				indexTweets(indexer, iw, tweets);//TODO isto esta mal
 				for (Tweet t : tweets) {
 					String currentDay = dateFormat.format(t.created_at);
 					if (currentDay.equals(day))

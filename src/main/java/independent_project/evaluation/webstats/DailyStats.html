@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Statistics for TREC RTS</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+</head>
+<body>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Google Charts -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <div class="container">
+        <div id="" class="row justify-content-center">
+            <div class="col-md-8 col-md-offset-2">
+                <script type="text/javascript">
+                    google.charts.load('current', {'packages':['corechart']});
+                    google.charts.setOnLoadCallback(drawChart);
+
+                    function drawChart() {
+                        var data = google.visualization.arrayToDataTable([
+                            ['Hours', 'Thu 2nd Aug'],
+                            ['00h00',  325],
+                            ['01h00',  264],
+                            ['02h00',  111],
+                            ['03h00',  75],
+                            ['04h00',  34],
+                            ['05h00',  44],
+                            ['06h00',  67],
+                            ['07h00',  77],
+                            ['08h00',  98],
+                            ['09h00',  111],
+                            ['10h00',  144],
+                            ['11h00',  233],
+                            ['12h00',  448],
+                            ['13h00',  557],
+                            ['14h00',  513],
+                            ['15h00',  375],
+                            ['16h00',  423],
+                            ['17h00',  478],
+                            ['18h00',  586],
+                            ['19h00',  647],
+                            ['20h00',  523],
+                            ['21h00',  613],
+                            ['22h00',  555],
+                            ['23h00',  435],
+                        ]);
+
+                        var options = {
+                            title: 'Frequency of Tweets',
+                            curveType: 'function',
+                            legend: { position: 'bottom' }
+                        };
+
+                        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+                        chart.draw(data, options);
+                    }
+                </script>
+                <div id="curve_chart" style="width:100%; height:57vh"></div>
+            </div>
+        </div>
+        <div class="row justify-content-around">
+            <div class="col-md-4">
+                <h4>Top 5 Users w/ more followers and Tweets</h4>
+                <script type="text/javascript">
+                    google.charts.load('current', {'packages':['table']});
+                    google.charts.setOnLoadCallback(drawTable);
+
+                    function drawTable() {
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('string', 'Screen Name');
+                        data.addColumn('number', 'Followers');
+                        data.addColumn('number', 'Tweets Today');
+                        data.addRows([
+                            ['RajaNurDanial_', 5578, 17],
+                            ['RemnantMan', 4568,  14],
+                            ['jdbwar',3215, 11],
+                            ['blugri',2368,  7],
+                            ['Alexrain90',971 , 2],
+                        ]);
+
+                        var table = new google.visualization.Table(document.getElementById('top_rep'));
+
+                        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+                    }
+                </script>
+                <div id="top_rep"></div>
+            </div>
+            <div class="col-md-4">
+                <h4>Top 5 Origin of Users with more Tweets</h4>
+                <script type="text/javascript">
+                    google.charts.load('current', {'packages':['table']});
+                    google.charts.setOnLoadCallback(drawTable);
+
+                    function drawTable() {
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('string', 'User Location');
+                        data.addColumn('number', 'Tweets Today');
+                        data.addRows([
+                            ['RajaNurDanial_', 5578],
+                            ['RemnantMan', 4568],
+                            ['jdbwar',3215],
+                            ['blugri',2368],
+                            ['Alexrain90', 971],
+                        ]);
+
+                        var table = new google.visualization.Table(document.getElementById('top_origin'));
+
+                        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+                    }
+                </script>
+                <div id="top_origin"></div>
+            </div>
+            <div class="col-md-4">
+                <h4>Top 5 Hashtags</h4>
+                <script type="text/javascript">
+                    google.charts.load('current', {'packages':['table']});
+                    google.charts.setOnLoadCallback(drawTable);
+
+                    function drawTable() {
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('string', 'Hashtag');
+                        data.addColumn('number', 'Tweets Today');
+                        data.addRows([
+                            ['Zika', 4325],
+                            ['Rio2016', 2345],
+                            ['espn',1895],
+                            ['Tesla',1248],
+                            ['hot', 989],
+                        ]);
+
+                        var table = new google.visualization.Table(document.getElementById('top_hashtags'));
+
+                        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+                    }
+                </script>
+                <div id="top_hashtags"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

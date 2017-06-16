@@ -101,6 +101,7 @@ public class Indexer {
 
         for (ScoreDoc hit : hits) {
             Document doc = searcher.doc(hit.doc);
+            //System.out.println("EXPLANATION: "+searcher.explain(query,hit.doc).toString());
 
             //String date = "YYYYMMDD"; //TODO: change to day for which result was calculated
             long tweet_id = doc.getField("id").numericValue().longValue();

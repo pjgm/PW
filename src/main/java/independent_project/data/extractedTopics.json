@@ -1,0 +1,97 @@
+[
+  { "topid" : "RTS1",
+    "title" : "transgender bathrooms",
+    "description" : "Find information on different sides of the debate on which bathroom can be used by a transgender individual",
+    "narrative" : "The user is interested in the politics of the transgender bathroom debate, including current and proposed bills, as well as backlash and economic implications (for example, boycotts)."
+  },
+  { "topid" : "RTS5",
+    "title" : "Olympic Soccer for Brazil",
+    "description" : "How do fans feel about the performance of the Brazilian Soccer team at the 2016 Olympics?",
+    "narrative" : "The user is a fan of Brazil and soccer and wants to know how other fans feel the Brazilian soccer team is doing in the 2016 Olympics."
+  },
+  { "topid" : "RTS6",
+    "title" : "Olympic medals for Thailand",
+    "description" : "Find information on medals won by Thailand at the 2016 Olympics.",
+    "narrative" : "The user is of Thai descent and wants to follow the medal count for Thailand at the 2016 Olympics. She wants to see comments about Thai competitors in medal contention as well as announcements of medals won."
+  },
+  { "topid" : "RTS10",
+    "title" : "Hiroshima atomic bomb",
+    "description" : "What is the current sentiment about the United States using an atomic bomb on Hiroshima in World War II?",
+    "narrative" : "The user is writing a paper on the sociological effects of nuclear weapons. He is particularly interested in investigating whether opinions of using atomic bombs change over time, and thus wants to track discussions of how people today regard the bombing of Hiroshima by the United States during World War II."
+  },
+  { "topid" : "RTS13",
+    "title" : "Amazon same day shipping",
+    "description" : "How do people feel about Amazon's same day shipping policy?",
+    "narrative" : "Amazon offers same day shipping for some items to certain locations. The user wants to investigate whether Amazon should expand the program, so she is looking for comments about the policy, including whether people make use of same day shipping, whether they are annoyed by the restrictions of the program, and whether they think it is worth the cost."
+  },
+  { "topid" : "RTS25",
+    "title" : "Russian Olympic team ban",
+    "description" : "Find sentiment on whether the entire Russian Olympic team should have been banned from the Rio Olympics.",
+    "narrative" : "The user is a sports writer and wants to follow people's opinions regarding the decision to not ban the entire Russian Olympic team from the Rio Olympics in light of the alleged state-sponsored doping program."
+  },
+  { "topid" : "RTS36",
+    "title" : "FDA and tobacco products",
+    "description" : "Find information on what the FDA is doing to tobacco products under its new rules that include E-cigarettes, vapes, and hookahs.",
+    "narrative" : "The user owns an E-cigarette shop and is concerned that new rule changes from the FDA for tobacco products could affect his business. He wants tweets that explain the rule changes as well as opinions from other business owners about the impact of the new rules."
+  },
+  { "topid" : "RTS37",
+    "title" : "Sea World",
+    "description" : "Find information on the condition of the animals kept at Sea World.",
+    "narrative" : "The user is an animal rights activist concerned about animals kept in captivity. She is looking for news about the safety and general living conditions of the animals at Sea World."
+  },
+  { "topid" : "RTS43",
+    "title" : "Donald Trump and Mike Pence policy differences",
+    "description" : "Find information about policy differences between the Republican presidential candidate Donald Trump and his running mate Mike Pence.",
+    "narrative" : "The user is interested in policy differences between Donald Trump and Mike Pence: attempts at reconciling their differences, reactions from the public, other politicians, donors, etc."
+  },
+  { "topid" : "MB229",
+    "title" : "legalizing medical marijuana",
+    "description" : "Find information on U.S. states considering or having legalized medical marijuana.",
+    "narrative" : "The user is a journalist working on a story about the use of medical marijuana in the U.S. As part of the research for the story, she wants to find information on which states have legalized medical marijuana or are considering doing so. Legislative bills, votes, and proposals for legalizing it are all relevant, as are legal or official public safety issues concerning legalized medical marijuana. However, general public opinions on why it should be legal or not are not relevant."
+  },
+  { "topid" : "MB267",
+    "title" : "fighting between Ukraine and pro-Russian rebels",
+    "description" : "Find information related to fighting between Ukrainian government forces and pro-Russian rebels in eastern Ukraine.",
+    "narrative" : "The user wants to monitor activities in the Ukraine where there continues to be clashes between Ukrainian government forces and pro-Russian rebels and Russian \"volunteers\". The user is interested in reports on any such battles as well as reports concerning diplomatic moves to end the fighting."
+  },
+  { "topid" : "MB363",
+    "title" : "school supplies sales",
+    "description" : "Find tweets about current sales on school supplies.",
+    "narrative" : "With school starting soon, the user is interested in where there are sales on back to school supplies."
+  },
+  { "topid" : "MB371",
+    "title" : "self-driving cars",
+    "description" : "Find information on self-driving cars.",
+    "narrative" : "The user is a commuter and wants to follow the development of self-driving cars. Tweets that discuss any aspect of self-driving cars are relevant, including accidents, testing, research, public opinion, legal issues, technology, safety, manufacturers, etc."
+  },
+  { "topid" : "MB377",
+    "title" : "animal attacks in safari parks",
+    "description" : "Find tweets relating to animals attacks on people at safari parks.",
+    "narrative" : "The user wants to find out popular opinion about attacks by wild animals on people or vehicles as they proceed through safari parks. Any comments relating to safety, warnings, ways to protect vehicles and their passengers, etc. are desirable. She also wants comments on whether these parks should be open to the public or even exist at all."
+  },
+  { "topid" : "MB391",
+    "title" : "polar icecap melting",
+    "description" : "Find information and opinions on reports that the icecaps are melting at both the north and south poles.",
+    "narrative" : "There have been reports that global warming is causing increased melting of the icecaps at the north and south poles. The user is interested in tweets discussing this issue."
+  },
+  { "topid" : "MB392",
+    "title" : "U.S. forest fires",
+    "description" : "Find reports of active forest fires in the U.S.",
+    "narrative" : "The user is a member of the U.S. Fire Administration responsible for tracking active forest fires throughout the country. He wishes to find tweets that report on locations and extents of active forest fire in the U.S. Discussions of forest fires generally are not relevant."
+  },
+  { "topid" : "MB409",
+    "title" : "airport TSA screenings",
+    "description" : "Find information on screenings by the Transportation Security Administration (TSA) at airports.",
+    "narrative" : "The user recently had an unpleasant experience during a Transportation Security Administration (TSA) airport screening and wants to follow tweets on experiences by others. Tweets that discuss personal screening experiences (positive or negative), methods, procedures, advise, confiscation of belongings, etc. are relevant."
+  },
+  { "topid" : "MB414",
+    "title" : "Americans traveling to Cuba",
+    "description" : "Find tweets describing personal experiences of Americans traveling to Cuba.",
+    "narrative" : "The user will be visiting a family member residing in Cuba. She wants to find tweets that recount personal experiences of Americans traveling to Cuba, including anticipation, expectations, restrictions, sightseeing, safety, currency, travel logistics, and tips or advice."
+  },
+  { "topid" : "MB440",
+    "title" : "women's rights in Saudi Arabia",
+    "description" : "Return tweets about women's rights in Saudi Arabia.",
+    "narrative" : "The user is interested in tweets referring to the staus of women in Saudi Arabia and any progress made towards advancing their rights."
+  }
+]
