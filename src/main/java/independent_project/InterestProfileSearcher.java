@@ -1,7 +1,6 @@
 package independent_project;
 
 import independent_project.config.Config;
-import independent_project.config.ConfigParser;
 import independent_project.model.interest_profile.Topic;
 import independent_project.model.runs.Run;
 import independent_project.model.twitter.Tweet;
@@ -21,11 +20,8 @@ public class InterestProfileSearcher {
 
 	private boolean indexAllTweets = false;
 
-	public InterestProfileSearcher() {
+	public InterestProfileSearcher(Config config, String filename ,String simMode, String tempEv, String qExp, String clust) {
 		try {
-
-			Config config = ConfigParser.parseFile("src/main/java/independent_project/config/cfg.txt");
-
 		    //Key -> TopicId ; Value -> Map(Key -> ClusterId ; Value -> Tweet)
             Map<String, Map<String, Tweet>> topRelTweets = TopQRelsParser.parseFile(config);
 
@@ -54,10 +50,8 @@ public class InterestProfileSearcher {
 					String currentDay = dateFormat.format(t.created_at);
 					if (currentDay.equals(day))
 						continue;
-					int endDayIndex = tweets.indexOf(t); // ending index for a given day
-					runs.addAll(searchTopics(indexer, topics, day));
+					runs.addAll(searchTopics(indexer, topics, day, simMode));
 					day = currentDay;
-					initDayIndex = endDayIndex;
 				}
 			} else {
 				for (Tweet t : tweets) {
@@ -66,14 +60,14 @@ public class InterestProfileSearcher {
 						continue;
 					int endDayIndex = tweets.indexOf(t); // ending index for a given day
 					indexTweets(indexer, iw, tweets.subList(initDayIndex, endDayIndex));
-					runs.addAll(searchTopics(indexer, topics, day));
+					runs.addAll(searchTopics(indexer, topics, day, simMode));
 					day = currentDay;
 					initDayIndex = endDayIndex;
 				}
 			}
 			iw.close();
 
-			PrintWriter pw = new PrintWriter(config.getResultsPath());
+			PrintWriter pw = new PrintWriter(config.getResultsPath()+filename+".txt");
 
 			for (Run r : runs) {
                 pw.println(r.toString());
@@ -102,13 +96,7 @@ public class InterestProfileSearcher {
 	 * 
 	 * @return list of runs
 	 */
-	private List<Run> searchTopics(Indexer indexer, List<Topic> topics, String day) throws IOException, ParseException {
-		return indexer.searchInterestTopics(topics, day);
-	}
-
-	public static void main(String args[]) throws IOException, ParseException {
-		Process p = Runtime.getRuntime().exec("python --version");
-
-		new InterestProfileSearcher();
+	private List<Run> searchTopics(Indexer indexer, List<Topic> topics, String day, String simMode) throws IOException, ParseException {
+		return indexer.searchInterestTopics(topics, day, simMode);
 	}
 }

@@ -12,6 +12,7 @@ public class ConfigParser {
     public static final String RESULTS_PATH = "results_path";
     public static final String QRELS_PATH = "qrels_path";
     public static final String TOP_QRELS_PATH = "top_qrels_path";
+    public static final String INPUT_PATH = "input_path";
 
     public static Config parseFile(String configPath) throws IOException {
 
@@ -50,6 +51,9 @@ public class ConfigParser {
             case TOP_QRELS_PATH:
                 parseTopQRelsPath(value, config);
                 break;
+            case INPUT_PATH:
+                parseInputPath(value, config);
+                break;
         }
     }
 
@@ -75,5 +79,9 @@ public class ConfigParser {
 
     private static void parseTopQRelsPath(String value, Config config) {
         config.setTopQRelsPath(value);
+    }
+
+    private static void parseInputPath(String value, Config config) {
+        config.setInputPath(value);
     }
 }

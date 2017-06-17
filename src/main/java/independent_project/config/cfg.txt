@@ -5,6 +5,9 @@
 TOPICS_PATH: src/main/java/independent_project/data/extractedTopics.json
 TWEETS_PATH: src/main/java/independent_project/data/tweets.jsonl
 INDEX_PATH: src/main/java/independent_project/index
-RESULTS_PATH: src/main/java/independent_project/evaluation/results.txt
+RESULTS_PATH: src/main/java/independent_project/evaluation/results/
+TREC_EVAL_RES_PATH: src/main/java/independent_project/evaluation/trec_eval
 QRELS_PATH: src/main/java/independent_project/evaluation/rts2016-qrels.txt
 TOP_QRELS_PATH: src/main/java/independent_project/evaluation/rts2016-top-qrels.txt
+INPUT_PATH: src/main/java/independent_project/evaluation/inputCommands.txt
+

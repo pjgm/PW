@@ -27,6 +27,10 @@ import java.util.List;
 
 public class Indexer {
 
+    public static final String TFIDF = "TFIDF";
+    public static final String BM25 = "BM25";
+    public static final String LMD = "LMD";
+
     private Path indexPath;
     private Analyzer analyzer;
 
@@ -58,18 +62,25 @@ public class Indexer {
         writer.commit();
     }
 
-    List<Run> searchInterestTopics(List<Topic> topics, String day) throws IOException, ParseException {
+    List<Run> searchInterestTopics(List<Topic> topics, String day, String simMode) throws IOException, ParseException {
 
         List<Run> runs = new ArrayList<Run>();
         IndexReader reader = DirectoryReader.open(FSDirectory.open(indexPath));
 
         IndexSearcher searcher = new IndexSearcher(reader);
-        searcher.setSimilarity(new ClassicSimilarity()); // TF-IDF
-//        searcher.setSimilarity(new LMDirichletSimilarity()); // LMD
-//        searcher.setSimilarity(new BM25Similarity()); //BM25
 
-  
-        
+        switch (simMode){
+            case TFIDF:
+                searcher.setSimilarity(new ClassicSimilarity());
+                break;
+            case BM25:
+                searcher.setSimilarity(new BM25Similarity());
+                break;
+            case LMD:
+                searcher.setSimilarity(new LMDirichletSimilarity());
+                break;
+        }
+
         QueryParser parser = new QueryParser("text", analyzer); // only considering tweet text
 
         for (Topic topic : topics) {
