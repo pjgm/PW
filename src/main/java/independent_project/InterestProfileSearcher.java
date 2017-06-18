@@ -31,7 +31,7 @@ import java.util.*;
 
 public class InterestProfileSearcher {
 
-	private boolean indexAllTweets = false;
+	private boolean indexAllTweets = true;
 
 	public InterestProfileSearcher(Config config, String filename ,String simMode, String temporalEvidence, String qExp, String clust) {
 		try {
@@ -46,7 +46,7 @@ public class InterestProfileSearcher {
 			tweets.remove(0); // Mon Aug 01 19:51:04 WEST 2016
 			tweets.remove(tweets.size() - 1); // Thu Aug 18 18:20:38 WEST 2016
 
-			removeDuplicates(tweets);
+			//removeDuplicates(tweets);
 
 			Analyzer analyzer = new Analyzer();
 			Indexer indexer = new Indexer(Paths.get(config.getIndexPath()), analyzer);

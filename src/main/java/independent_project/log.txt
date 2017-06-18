@@ -10,6 +10,21 @@ python2 rts2016-batchB-eval.py -q rts2016-qrels.txt -c rts2016-batch-clusters.js
 
 https://www.slideshare.net/lucenerevolution/potter-timothy-boosting-documents-in-solr
 
+In our baseline, we considered 2 options: building the index incrementally and index all tweets at once. After
+testing both options, we found that indexing incrementally after each day gave us better results and as such we
+decided to use that as our baseline.
+
+The incremental index is built using the creation date field of the tweet,
+
+As far as ranking functions go, we decided to use TF-IDF as our baseline and an analyser using the 7 most common
+english words. This decision was based on the fact that less than 1% of tweets are not written in english (as
+reported by the language field of the given dataset) and after further analysing the tweets manually, we found that
+even many tweets that should be in a different language are actually written in english.
+
+We were able to parse every field of the 28925 tweets using GSon. Null or empty tweet fields were ignored.
+
+
+
 Baseline:
 
 runtag	topic	nDCG1 	nDCG0

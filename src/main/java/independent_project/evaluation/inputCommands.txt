@@ -1,2 +1,2 @@
-RANKFUSION_NoTempEv_NoQExp_NoClust RANKFUSION false None false
+TFIDF_NoTempEv_NoQExp_NoClust TFIDF false None false
 RANKFUSION_TempEv_NoQExp_NoClust RANKFUSION true None false
