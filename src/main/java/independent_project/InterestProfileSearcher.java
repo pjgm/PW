@@ -20,7 +20,7 @@ public class InterestProfileSearcher {
 
 	private boolean indexAllTweets = false;
 
-	public InterestProfileSearcher(Config config, String filename ,String simMode, String tempEv, String qExp, String clust) {
+	public InterestProfileSearcher(Config config, String filename ,String simMode, String temporalEvidence, String qExp, String clust) {
 		try {
 		    //Key -> TopicId ; Value -> Map(Key -> ClusterId ; Value -> Tweet)
             Map<String, Map<String, Tweet>> topRelTweets = TopQRelsParser.parseFile(config);
@@ -42,15 +42,17 @@ public class InterestProfileSearcher {
 
 			String day = dateFormat.format(tweets.get(0).created_at);
 			int initDayIndex = 0; // starting index for a given day
+			boolean tempEv = Boolean.parseBoolean(temporalEvidence);
 
 			List<Run> runs = new ArrayList<Run>();
 			if (indexAllTweets) {
 				indexTweets(indexer, iw, tweets);//TODO isto esta mal
 				for (Tweet t : tweets) {
 					String currentDay = dateFormat.format(t.created_at);
+					//List<Tweet> tweetsOfTheDay = tweets.subList(initDayIndex, endDayIndex);
 					if (currentDay.equals(day))
 						continue;
-					runs.addAll(searchTopics(indexer, topics, day, simMode));
+					runs.addAll(searchTopics(indexer, topics, day, simMode, tempEv));
 					day = currentDay;
 				}
 			} else {
@@ -59,8 +61,9 @@ public class InterestProfileSearcher {
 					if (currentDay.equals(day))
 						continue;
 					int endDayIndex = tweets.indexOf(t); // ending index for a given day
-					indexTweets(indexer, iw, tweets.subList(initDayIndex, endDayIndex));
-					runs.addAll(searchTopics(indexer, topics, day, simMode));
+					List<Tweet> tweetsOfTheDay = tweets.subList(initDayIndex, endDayIndex);
+					indexTweets(indexer, iw, tweetsOfTheDay);
+					runs.addAll(searchTopics(indexer, topics, day, simMode, tempEv));
 					day = currentDay;
 					initDayIndex = endDayIndex;
 				}
@@ -81,6 +84,8 @@ public class InterestProfileSearcher {
 		} catch (ParseException e) {
 			System.out.println("PARSE DEU COCO");
 			e.printStackTrace();
+		} catch (java.text.ParseException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -96,7 +101,7 @@ public class InterestProfileSearcher {
 	 * 
 	 * @return list of runs
 	 */
-	private List<Run> searchTopics(Indexer indexer, List<Topic> topics, String day, String simMode) throws IOException, ParseException {
-		return indexer.searchInterestTopics(topics, day, simMode);
+	private List<Run> searchTopics(Indexer indexer, List<Topic> topics, String day, String simMode, boolean tempEv) throws IOException, ParseException, java.text.ParseException {
+		return indexer.searchInterestTopics(topics, day, simMode, tempEv);
 	}
 }

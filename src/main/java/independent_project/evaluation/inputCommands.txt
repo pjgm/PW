@@ -1,1 +1,2 @@
 BM25_NoTempEv_NoQExp_NoClust BM25 false None false
+BM25_TempEv_NoQExp_NoClust BM25 true None false
