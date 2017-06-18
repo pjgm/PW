@@ -1,2 +1,2 @@
-BM25_NoTempEv_NoQExp_NoClust BM25 false None false
-BM25_TempEv_NoQExp_NoClust BM25 true None false
+RANKFUSION_NoTempEv_NoQExp_NoClust RANKFUSION false None false
+RANKFUSION_TempEv_NoQExp_NoClust RANKFUSION true None false

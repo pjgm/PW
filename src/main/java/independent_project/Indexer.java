@@ -8,10 +8,6 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.queries.function.BoostedQuery;
-import org.apache.lucene.queries.function.ValueSource;
-import org.apache.lucene.queries.function.valuesource.LongFieldSource;
-import org.apache.lucene.queries.function.valuesource.ReciprocalFloatFunction;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -23,7 +19,6 @@ import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.apache.lucene.search.similarities.LMDirichletSimilarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -69,7 +64,7 @@ public class Indexer {
 
             doc.add(new LongPoint("timestamp_ms", t.timestamp_ms));
             doc.add(new StoredField("timestamp_ms", t.timestamp_ms));
-            // add more when needed
+
             writer.addDocument(doc);
         }
         writer.commit();
@@ -108,11 +103,7 @@ public class Indexer {
 
         List<Run> runs = new ArrayList<>();
 
-        Query query = parser.parse(topic.title); // TODO: Use description or narrative
-
-        ValueSource boostSource = new ReciprocalFloatFunction(new LongFieldSource("timestamp_ms"), 4, 1, 1);
-
-        query = new BoostedQuery(query, boostSource);
+        Query query = parser.parse(topic.title);
 
         System.out.println(query.toString());
 
@@ -127,19 +118,18 @@ public class Indexer {
         System.out.println(numTotalHits + " total matching documents");
 
         int rank = 1;
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        Date dayDate = dateFormat.parse(day);
-        long todayTimeStamp = dayDate.getTime();
+        Calendar c = Calendar.getInstance();
+        c.setTime(dateFormat.parse(day));
+        c.add(Calendar.DATE, 1);
+        long todayTimeStamp = c.getTimeInMillis();
 
         if(tempEv) {
-            System.out.println("ENTREI");
             for (ScoreDoc hit : hits) {
                 Document doc = searcher.doc(hit.doc);
                 long tweetTimestamp = doc.getField("timestamp_ms").numericValue().longValue();
-                System.out.println("ORIGINAL: "+hit.score);
                 hit.score = hit.score * tweetTimeDecayScore(todayTimeStamp, tweetTimestamp);
-                System.out.println("COMBINADO: "+hit.score);
-                //String date = "YYYYMMDD"; //TODO: change to day for which result was calculated
             }
             Arrays.sort(hits, Comparator.comparing((ScoreDoc h) -> h.score).reversed());
         }
@@ -151,7 +141,6 @@ public class Indexer {
 
         for (int i=0; i<10; i++){
             topDocs.add(searcher.doc(hits[i].doc));
-            //System.out.println("Score : "+i+" "+hits[i].score);
             long tweet_id = searcher.doc(hits[i].doc).getField("id").numericValue().longValue();
             Run run = new Run(day, topic.topid, "Q0", tweet_id, rank++, hits[i].score, "run-1");
             runs.add(run);
@@ -161,13 +150,8 @@ public class Indexer {
         return runs;
     }
 
-    private float tweetTimeDecayScore(long queryTimeStamp, long tweetTimestamp){
-        //System.out.println("QUERYTIME: "+queryTimeStamp);
-        //System.out.println("TWEETTIME: "+tweetTimestamp);
-        //System.out.println("CONTAS: "+(float)(queryTimeStamp-tweetTimestamp)/HALFEVENT);
+    private float tweetTimeDecayScore(long queryTimeStamp, long tweetTimestamp) {
         double denominator = Math.pow(2,(float)(queryTimeStamp-tweetTimestamp)/HALFEVENT);
-        //System.out.println("DENOMINATOR: "+denominator);
-        System.out.println("RESULT: "+(float)(1/denominator));
         return (float)(1/denominator);
     }
 }

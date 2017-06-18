@@ -7,8 +7,21 @@ import independent_project.model.twitter.Tweet;
 import independent_project.parsing.InterestParser;
 import independent_project.parsing.TopQRelsParser;
 import independent_project.parsing.TweetParser;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.similarities.ClassicSimilarity;
+import org.apache.lucene.store.RAMDirectory;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -33,10 +46,11 @@ public class InterestProfileSearcher {
 			tweets.remove(0); // Mon Aug 01 19:51:04 WEST 2016
 			tweets.remove(tweets.size() - 1); // Thu Aug 18 18:20:38 WEST 2016
 
+			removeDuplicates(tweets);
+
 			Analyzer analyzer = new Analyzer();
 			Indexer indexer = new Indexer(Paths.get(config.getIndexPath()), analyzer);
 			IndexWriter iw = indexer.openIndex();
-			// iw.commit();
 
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
@@ -46,10 +60,9 @@ public class InterestProfileSearcher {
 
 			List<Run> runs = new ArrayList<Run>();
 			if (indexAllTweets) {
-				indexTweets(indexer, iw, tweets);//TODO isto esta mal
+				indexTweets(indexer, iw, tweets);
 				for (Tweet t : tweets) {
 					String currentDay = dateFormat.format(t.created_at);
-					//List<Tweet> tweetsOfTheDay = tweets.subList(initDayIndex, endDayIndex);
 					if (currentDay.equals(day))
 						continue;
 					runs.addAll(searchTopics(indexer, topics, day, simMode, tempEv));
@@ -69,7 +82,6 @@ public class InterestProfileSearcher {
 				}
 			}
 			iw.close();
-
 			PrintWriter pw = new PrintWriter(config.getResultsPath()+filename+".txt");
 
 			for (Run r : runs) {
@@ -79,14 +91,61 @@ public class InterestProfileSearcher {
 			pw.close();
 
 		} catch (IOException e) {
-			System.out.println("IO DEU COCO");
 			e.printStackTrace();
 		} catch (ParseException e) {
-			System.out.println("PARSE DEU COCO");
 			e.printStackTrace();
 		} catch (java.text.ParseException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void removeDuplicates(List<Tweet> tweets) throws IOException {
+		Analyzer analyzer = new Analyzer();
+		IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
+		iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+		RAMDirectory idx = new RAMDirectory();
+
+		IndexWriter writer = new IndexWriter(idx, iwc);
+
+		for (Tweet t : tweets) {
+			Document doc = new Document();
+			doc.add(new TextField("text", t.text, Field.Store.YES));
+			writer.addDocument(doc);
+		}
+		writer.close();
+
+		IndexReader reader = DirectoryReader.open(idx);
+		IndexSearcher searcher = new IndexSearcher(reader);
+		searcher.setSimilarity(new ClassicSimilarity()); //TF_IDF
+
+		List<Tweet> dupes = new ArrayList<>();
+
+		for (Tweet t : tweets) {
+			QueryParser parser = new QueryParser("text", analyzer);
+			Query query;
+			try {
+				query = parser.parse(parser.escape(t.text));
+			} catch (ParseException e) {
+				continue;
+			}
+
+
+			TopDocs results = searcher.search(query, 20);
+			ScoreDoc[] hits = results.scoreDocs;
+
+			if (hits.length == 0) {
+				continue;
+			}
+			//first result is the current tweet
+			for (ScoreDoc hit : Arrays.copyOfRange(hits, 1	, hits.length)) {
+				if (hit.score > 4f) {
+					dupes.add(t);
+				}
+			}
+		}
+		System.out.println("Tweets before: " + tweets.size());
+		tweets.removeAll(dupes);
+		System.out.println("After: " + tweets.size());
 	}
 
 	/**
