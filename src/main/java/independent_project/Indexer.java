@@ -8,6 +8,10 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queries.function.BoostedQuery;
+import org.apache.lucene.queries.function.ValueSource;
+import org.apache.lucene.queries.function.valuesource.LongFieldSource;
+import org.apache.lucene.queries.function.valuesource.ReciprocalFloatFunction;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -20,8 +24,7 @@ import org.apache.lucene.search.similarities.LMDirichletSimilarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
-import javax.print.Doc;
-import java.io.File;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
@@ -54,6 +57,7 @@ public class Indexer {
 
     void indexTweets(IndexWriter writer, List<Tweet> tweets) throws IOException {
         for (Tweet t: tweets) {
+
             Document doc = new Document();
             doc.add(new StoredField("id", t.id));
 
@@ -106,10 +110,15 @@ public class Indexer {
 
         Query query = parser.parse(topic.title); // TODO: Use description or narrative
 
+        ValueSource boostSource = new ReciprocalFloatFunction(new LongFieldSource("timestamp_ms"), 4, 1, 1);
+
+        query = new BoostedQuery(query, boostSource);
+
         System.out.println(query.toString());
 
         TopDocs results = searcher.search(query, 50);
         ScoreDoc[] hits = results.scoreDocs;
+
 
         int numTotalHits = results.totalHits;
 
