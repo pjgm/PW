@@ -8,6 +8,12 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queries.function.BoostedQuery;
+import org.apache.lucene.queries.function.ValueSource;
+import org.apache.lucene.queries.function.valuesource.ConstValueSource;
+import org.apache.lucene.queries.function.valuesource.IDFValueSource;
+import org.apache.lucene.queries.function.valuesource.LongFieldSource;
+import org.apache.lucene.queries.function.valuesource.ReciprocalFloatFunction;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -19,11 +25,13 @@ import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.apache.lucene.search.similarities.LMDirichletSimilarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.solr.search.function.ReverseOrdFieldSource;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Indexer {
 
@@ -48,6 +56,7 @@ public class Indexer {
 
     void indexTweets(IndexWriter writer, List<Tweet> tweets) throws IOException {
         for (Tweet t: tweets) {
+
             Document doc = new Document();
             doc.add(new StoredField("id", t.id));
 
@@ -56,6 +65,10 @@ public class Indexer {
             doc.add(new TextField("text", t.text, Field.Store.YES));
 
             doc.add(new StringField("source", t.source, Field.Store.YES));
+
+            doc.add(new LongPoint("timestamp_ms", t.timestamp_ms));
+            doc.add(new StoredField("timestamp_ms", t.timestamp_ms));
+
             // add more when needed
             writer.addDocument(doc);
         }
@@ -97,10 +110,15 @@ public class Indexer {
 
         Query query = parser.parse(topic.title); // TODO: Use description or narrative
 
+        ValueSource boostSource = new ReciprocalFloatFunction(new LongFieldSource("timestamp_ms"), 4, 1, 1);
+
+        query = new BoostedQuery(query, boostSource);
+
         System.out.println(query.toString());
 
         TopDocs results = searcher.search(query, 10);
         ScoreDoc[] hits = results.scoreDocs;
+
 
         int numTotalHits = results.totalHits;
 

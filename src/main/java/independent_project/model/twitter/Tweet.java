@@ -30,5 +30,5 @@ public class Tweet {
     public boolean retweeted;
     public String filter_level;
     public String lang;
-    public String timestamp_ms;
+    public Long timestamp_ms;
 }
