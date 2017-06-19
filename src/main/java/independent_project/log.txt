@@ -14,7 +14,8 @@ In our baseline, we considered 2 options: building the index incrementally and i
 testing both options, we found that indexing incrementally after each day gave us better results and as such we
 decided to use that as our baseline.
 
-The incremental index is built using the creation date field of the tweet,
+The incremental index is built using the creation date field of the tweet, firstly by ordering the tweets by date and
+ next by grouping the tweets and evaluating every topic for the given and past days.
 
 As far as ranking functions go, we decided to use TF-IDF as our baseline and an analyser using the 7 most common
 english words. This decision was based on the fact that less than 1% of tweets are not written in english (as
@@ -282,11 +283,13 @@ run-1	All  	0.2517	0.0213
 
 Duplicate tweet removal
 
-For the removal of redundant information we preprocessed the tweets using an index in RAM where we use each tweet as
-a query. There were a lot of options to solve this problem including clustering algorithms such as k-means. After
-some research on the topic however we found that Lucene's implementation of TF-IDF uses the Vector Space Model and
-Cosine Similarity for scoring. With some careful tuning of the threshold score value, we managed to substantially
-improve the score in many topics and lower the score in a few cases. However, the overall score increased.
+For the removal of redundant information we preprocessed the tweets by indexing the tweets in RAM where instead of
+using the evaluation topics, we use each tweet as a query. There were a lot of options to solve this problem including clustering algorithms such as k-means. After some research on the topic however we found that Lucene's implementation of TF-IDF uses the Vector Space Model and Cosine Similarity for scoring.
+
+When searching using the tweet as a query, that same tweet obviously always appears first in the ranked tweets, so we
+ can safely ignore the first result and work with rest of the returned results.
+
+With some careful tuning of the threshold score value, we managed to substantially improve the score in many topics and lower the score in a few cases. The overall score increased.
 
 We used a method of trial and error to find the best threshold and we found that a threshold too high only removes
 identical copies of the tweet and a threshold too low causes a lot of removals of non similar tweets. Since this
@@ -307,7 +310,16 @@ Duplicate removal (t = 5):
     - nDCG1: 0.2517
     - nDCG0: 0.0213
 
+With t being the threshold score, in this case the Cosine Similarity score.
+
 As we can see, there's only a slight improvement and we would get minimal benefits from tuning this parameter further.
+
+
+--------------------------------------------
+
+Rank Fusion
+
+We deciced to implement a rank fusion method to get more accurate results. The scores were combined using CombSUM using
 
 
 --------------------------------------------

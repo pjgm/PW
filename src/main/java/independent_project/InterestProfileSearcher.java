@@ -31,7 +31,7 @@ import java.util.*;
 
 public class InterestProfileSearcher {
 
-	private boolean indexAllTweets = true;
+	private boolean indexAllTweets = false;
 
 	public InterestProfileSearcher(Config config, String filename ,String simMode, String temporalEvidence, String qExp, String clust) {
 		try {

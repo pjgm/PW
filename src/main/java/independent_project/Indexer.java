@@ -14,9 +14,7 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.similarities.BM25Similarity;
-import org.apache.lucene.search.similarities.ClassicSimilarity;
-import org.apache.lucene.search.similarities.LMDirichletSimilarity;
+import org.apache.lucene.search.similarities.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
@@ -30,6 +28,7 @@ public class Indexer {
     public static final String TFIDF = "TFIDF";
     public static final String BM25 = "BM25";
     public static final String LMD = "LMD";
+    public static final String RANKFUSION = "RANKFUSION";
     public static final long HALFEVENT = 1470484800;
 
     private Path indexPath;
@@ -86,6 +85,13 @@ public class Indexer {
                 break;
             case LMD:
                 searcher.setSimilarity(new LMDirichletSimilarity());
+                break;
+            case RANKFUSION:
+                Similarity[] sims = new Similarity[3];
+                sims[0] = new ClassicSimilarity();
+                sims[1] = new BM25Similarity();
+                sims[3] = new LMDirichletSimilarity();
+                searcher.setSimilarity(new MultiSimilarity(sims));
                 break;
         }
 
