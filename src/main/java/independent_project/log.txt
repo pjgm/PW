@@ -319,7 +319,9 @@ As we can see, there's only a slight improvement and we would get minimal benefi
 
 Rank Fusion
 
-We deciced to implement a rank fusion method to get more accurate results. The scores were combined using CombSUM using
+We deciced to implement a rank fusion method to get more accurate results. The scores were combined using CombSUM
+using the MultiSimilarity class available in lucene and we decided to combine 3 different ranking functions: TF-IDF,
+BM25 and LMD. The results improved
 
 
 --------------------------------------------

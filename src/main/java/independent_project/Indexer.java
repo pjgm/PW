@@ -90,7 +90,7 @@ public class Indexer {
                 Similarity[] sims = new Similarity[3];
                 sims[0] = new ClassicSimilarity();
                 sims[1] = new BM25Similarity();
-                sims[3] = new LMDirichletSimilarity();
+                sims[2] = new LMDirichletSimilarity();
                 searcher.setSimilarity(new MultiSimilarity(sims));
                 break;
         }
